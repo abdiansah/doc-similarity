@@ -1,0 +1,3777 @@
+NIM (Nomor Induk Mahasiswa),Tulis (copas) kode python-nya disini:
+9021181722067,"""""""NOMOR 1""""""
+
+def convert_num2word(number):
+    return print(number)
+
+from num2words import num2words
+num = num2words(200000, to = 'currency', lang='id')
+conv = convert_num2word(num)
+
+""""""NOMOR 2""""""
+def word2num (textnum, numwords={}):
+    if not numwords:
+        satuan = ['', 'satu', 'dua', 'tiga', 'empat', 'lima',
+          'enam', 'tujuh', 'delapan', 'sembilan', 'sepuluh', 'sebelas', 'duabelas', 'tigabelas', 
+          'empatbelas', 'limabelas ', 'enambelas', 'tujuhbelas', 'delapanbelas', 'sembilanbelas']
+
+        puluhan = ["""", """", ""duapuluh"", ""tigapuluh"", ""empatpuluh"", ""limapuluh"", ""enampuluh"", 
+                   ""tujuhpuluh"", ""delapanpuluh"", ""sembilanpuluh""]
+
+        ukuran = [""ratus"", ""ribu"", ""juta"", ""miliar"", ""triliyun""]
+
+        numwords[""and""] = (1, 0)
+        for idx, word in enumerate(satuan): numwords[word] = (1, idx)
+        for idx, word in enumerate(puluhan): numwords[word] = (1, idx * 10)
+        for idx, word in enumerate(ukuran): numwords[word] = (10 ** (idx * 3 or 2), 0)
+
+    ordinal_words = {'pertama':1, 'kedua':2, 'ketiga':3, 'keempat':4, 'kelima':5, 'keenam':6,
+                     'ketujuh':7, 'kedelapan':8, 'kesembilan':9, 'kesepuluh':10}
+
+    textnum = textnum.replace('-',' ')
+
+    current = result = 0
+    curstring = """"
+    onnumber = False
+    for word in textnum.split():
+        if word in ordinal_words:
+            scale, increment = (1, ordinal_words[word])
+            current = current * scale + increment
+            if scale > 100:
+                result += current
+                current = 0
+            onnumber = True
+        else:
+
+            if word not in numwords:
+                if onnumber:
+                    curstring += repr(result + current) + "" ""
+                curstring += word + "" ""
+                result = current = 0
+                onnumber = False
+            else:
+                scale, increment = numwords[word]
+
+                current = current * scale + increment
+                if scale > 100:
+                    result += current
+                    current = 0
+                onnumber = True
+
+    if onnumber:
+        curstring += repr(result + current)
+
+    return curstring
+
+convert = word2num('Budi mempunyai uang satu juta lima ratus tigapuluh ribu rupiah')
+print(convert)"
+9021281722030,"""""""
+Created on Mon Feb  3 22:45:23 2020
+
+@author: USER
+FUNGSI NORMALISASI DARI ANGKA KE KATA
+""""""
+import string
+
+satuan = ['', 'satu ', 'dua ', 'tiga ', 'empat ', 'lima ','enam ', 'tujuh ', 'delapan ', 'sembilan ', 'sepuluh ',
+          'sebelas ', 'dua belas ', 'tiga belas ', 'empat belas ', 'lima belas ', 'enam belas ', 'tujuh belas ', 'delapan belas ', 'sembilan belas ']
+
+
+def tulis(angka, kelipatan):
+    terbilang = satuan[angka] + kelipatan
+    return terbilang
+
+
+def ratus_puluh_satuan(angka):
+    ratus = int(angka) // 100
+    sisa_ratus = int(angka) % 100
+    puluh = int(sisa_ratus) // 10
+    satuan = int(angka) % 10
+    terbilang = ''
+
+    if(ratus == 1):
+        terbilang += tulis(0, ""seratus "")
+    elif(ratus != 1 and ratus >= 1):
+        terbilang += tulis(ratus, ""ratus "")
+    if (sisa_ratus >= 20):
+        terbilang += tulis(puluh, ""puluh "")
+        terbilang += tulis(satuan, """")
+    elif(sisa_ratus < 20):
+        terbilang += tulis(sisa_ratus, """")
+
+    return terbilang
+
+
+def milyar_juta_ribu(angka):
+    milyar =  int(angka) // 1000000000
+    sisa_milyar = int(angka) % 1000000000
+    juta = int(sisa_milyar) // 1000000
+    sisa_juta = int(sisa_milyar) % 1000000
+    ribu = int(sisa_juta) // 1000
+    sisa_ribu = int(sisa_juta) % 1000
+    terbilang = ''
+
+    if(milyar >= 1):
+        terbilang += ratus_puluh_satuan(milyar)
+        terbilang += ""milyar ""
+    if(juta >= 1):
+        terbilang += ratus_puluh_satuan(juta)
+        terbilang += ""juta ""
+    if(ribu > 1):
+        terbilang += ratus_puluh_satuan(ribu)
+        terbilang += ""ribu ""
+    elif(ribu == 1):
+        terbilang += ""seribu ""
+    terbilang += ratus_puluh_satuan(sisa_ribu)
+    if int(angka) == 0:
+        terbilang += ""nol ""
+        
+    return terbilang
+
+
+angka = (input(""Maskukan Angka :""))
+clear = angka.translate(str.maketrans("""","""",string.punctuation))
+
+if 'p' in angka:
+    hasil = clear.split()
+    terbilang = milyar_juta_ribu(hasil[1]) + 'rupiah'
+elif '%' in angka:
+    terbilang = milyar_juta_ribu(clear) + 'persen'
+else:
+    terbilang = milyar_juta_ribu(clear)
+    
+if ',' in angka:
+    pisah = angka.split(',')
+    clearpisah = pisah[1].translate(str.maketrans("""","""",string.punctuation))
+    terbilang1 = milyar_juta_ribu(pisah[0])
+    terbilang = terbilang1 + 'koma '
+    for huruf in str(clearpisah):
+        terbilang2 = milyar_juta_ribu(huruf)
+        terbilang = terbilang + terbilang2
+    
+    if '%' in angka:
+        terbilang = terbilang + 'persen'
+
+print(terbilang)
+
+
+
+
+
+""""""
+Created on Tue Feb  4 09:25:50 2020
+
+@author: USER
+FUNGSI NORMALISASI DARI KATA KE ANGKA
+""""""
+
+satuan = ['', 'satu', 'dua', 'tiga', 'empat', 'lima','enam', 'tujuh', 'delapan', 'sembilan', 'sepuluh',
+          'sebelas', 'dua belas', 'tiga belas', 'empat belas', 'lima belas', 'enam belas', 'tujuh belas', 'delapan belas', 'sembilan belas']
+
+def tulis(huruf):
+    pisah = huruf.split()
+    angka = 0
+    hasil = 0
+    for a in pisah:          
+        if a == 'ribu':
+            if angka == 0:
+                hasil = hasil * 1000
+            else:
+                angka = angka * 1000
+                hasil += angka
+                angka = 0
+        elif a == 'ratus':
+            if angka == 0:
+                hasil = hasil * 100
+            else:
+                angka = angka * 100
+                hasil += angka
+                angka = 0
+        elif a == 'puluh':
+            if angka == 0:
+                hasil = hasil * 10
+            else:
+                angka = angka * 10
+                hasil += angka
+                angka = 0
+        elif a == 'belas':
+            angka = angka + 10
+            hasil += angka
+            angka = 0
+        elif a == 'juta':
+            if angka == 0:
+                hasil = hasil * 1000000
+            else:
+                angka = angka * 1000000
+                hasil += angka
+                angka = 0
+        else:
+            for x in range(20):
+                if a == satuan[x]:
+                    angka = angka + x
+
+    return hasil, angka
+
+
+huruf = (input(""Maskukan Input :""))
+terbilang, a=tulis(huruf)
+hasil = terbilang + a
+if 'piah' in huruf:
+    hasil = 'Rp. ' + str(hasil)
+   
+print(hasil)
+"
+9021181722021,"1. Membuat fungsi normalisasi dari angka ke kata :
+
+def is_number(x):
+    if type(x) == str:
+        x = x.replace(',', '')
+    try:
+        float(x)
+    except:
+        return False
+    return True
+
+def text2int (textnum, numwords={}):
+    units = [' ','satu','dua','tiga','empat','lima','enam','tujuh','delapan ','sembilan','sepuluh','sebelas','dua belas','tiga belas','empat belas', 
+          'lima belas','enam belas','tujuh belas','delapan belas ','sembilan belas']
+    tens = ['', '','dua belas','tiga belas','empat belas','lima belas','enam belas','tujuh belas','delapan belas','sembilan belas']
+    scales = ['ratus', 'ribu', 'juta', 'miliar', 'triliun']
+    ordinal_words = {'pertama':1, 'kedua':2, 'ketiga':3, 'kelima':5, 'kedelapan':8, 'kesembilan':9, 'keduabelas':12}
+    ordinal_endings = [('ieth', 'y'), ('th', '')]
+
+    if not numwords:
+        numwords['and'] = (1, 0)
+        for idx, word in enumerate(units): numwords[word] = (1, idx)
+        for idx, word in enumerate(tens): numwords[word] = (1, idx * 10)
+        for idx, word in enumerate(scales): numwords[word] = (10 ** (idx * 3 or 2), 0)
+
+    textnum = textnum.replace('-', ' ')
+
+    current = result = 0
+    curstring = ''
+    onnumber = False
+    lastunit = False
+    lastscale = False
+
+    def is_numword(x):
+        if is_number(x):
+            return True
+        if word in numwords:
+            return True
+        return False
+
+    def from_numword(x):
+        if is_number(x):
+            scale = 0
+            increment = int(x.replace(',', ''))
+            return scale, increment
+        return numwords[x]
+
+    for word in textnum.split():
+        if word in ordinal_words:
+            scale, increment = (1, ordinal_words[word])
+            current = current * scale + increment
+            if scale > 100:
+                result += current
+                current = 0
+            onnumber = True
+            lastunit = False
+            lastscale = False
+        else:
+            for ending, replacement in ordinal_endings:
+                if word.endswith(ending):
+                    word = ""%s%s"" % (word[:-len(ending)], replacement)
+
+            if (not is_numword(word)) or (word == 'and' and not lastscale):
+                if onnumber:
+                    # Flush the current number we are building
+                    curstring += repr(result + current) + "" ""
+                curstring += word + "" ""
+                result = current = 0
+                onnumber = False
+                lastunit = False
+                lastscale = False
+            else:
+                scale, increment = from_numword(word)
+                onnumber = True
+
+                if lastunit and (word not in scales):                                                                                                                                                                                                                                         
+                    # Assume this is part of a string of individual numbers to                                                                                                                                                                                                                
+                    # be flushed, such as a zipcode ""one two three four five""                                                                                                                                                                                                                 
+                    curstring += repr(result + current)                                                                                                                                                                                                                                       
+                    result = current = 0                                                                                                                                                                                                                                                      
+
+                if scale > 1:                                                                                                                                                                                                                                                                 
+                    current = max(1, current)                                                                                                                                                                                                                                                 
+
+                current = current * scale + increment                                                                                                                                                                                                                                         
+                if scale > 100:                                                                                                                                                                                                                                                               
+                    result += current                                                                                                                                                                                                                                                         
+                    current = 0                                                                                                                                                                                                                                                               
+
+                lastscale = False                                                                                                                                                                                                              
+                lastunit = False                                                                                                                                                
+                if word in scales:                                                                                                                                                                                                             
+                    lastscale = True                                                                                                                                                                                                         
+                elif word in units:                                                                                                                                                                                                             
+                    lastunit = True
+
+    if onnumber:
+        curstring += repr(result + current)
+
+    return curstring
+
+Convert = text2int('dua ratus ribu rupiah')
+Convert1 = text2int('sembilan lima koma tujuh empat persen')
+Convert2 = text2int('satu juta lima ratus')
+print(Convert)
+print(Convert1)
+print(Convert2)
+
+2.  Membuat fungsi normalisasi dari kata ke angka :
+
+def convert_num2word(number):
+    return print(number)
+
+from num2words import num2words
+num = num2words(200000, lang='id')
+num1 = num2words(95,74%, lang='id')
+num2 = num2words(1000500, lang='id')
+conv = convert_num2word(num)
+conv1= convert_num2word(num1)
+conv2= convert_num2word(num2)
+
+"
+9021181722007,"# -*- coding: utf-8 -*-
+""""""
+Created on Tue Feb  4 17:09:15 2020
+
+@author: vince
+""""""
+
+angka_satuan = ['', 'satu ', 'dua ', 'tiga ', 'empat ', 'lima ',
+          'enam ', 'tujuh ', 'delapan ', 'sembilan ', 'sepuluh ', 'sebelas ', 'dua belas ', 'tiga belas ', 'empat belas ', 'lima belas ', 'enam belas ', 'tujuh belas ', 'delapan belas ', 'sembilan belas ']
+
+
+def tulis(angka, kelipatan):
+    terbilang = angka_satuan[angka] + kelipatan
+    return terbilang
+
+def ratusan(angka):
+    ratus = angka // 100
+    sisa_ratus = angka % 100
+    puluh = sisa_ratus // 10
+    satuan = angka % 10
+    terbilang = ''
+
+    if(ratus == 1):
+        terbilang += tulis(0, ""seratus "")
+    elif(ratus != 1 and ratus >= 1):
+        terbilang += tulis(ratus, ""ratus "")
+    if (sisa_ratus >= 20):
+        terbilang += tulis(puluh, ""puluh "")
+        terbilang += tulis(satuan, """")
+    elif(sisa_ratus < 20):
+        terbilang += tulis(sisa_ratus, """")
+
+    return terbilang
+
+def konversi_angka(angka):
+    juta = angka // 1000000
+    sisa_juta = angka % 1000000
+    ribu = sisa_juta // 1000
+    sisa_ribu = sisa_juta % 1000
+    terbilang = ''
+    
+    if(juta >= 1):
+        terbilang += ratusan(juta)
+        terbilang += ""juta ""
+    if(ribu > 1):
+        terbilang += ratusan(ribu)
+        terbilang += ""ribu ""
+    elif(ribu == 1):
+        terbilang += ""seribu ""
+    terbilang += ratusan(sisa_ribu)
+
+    return terbilang
+
+def listToString(list):   
+    str = """"  
+    
+    for strinlist in list:  
+        str = str + strinlist 
+    
+    return str 
+
+angka = input(""Maskukan Angka :"")
+angka = angka.replace('.','')
+angka = int(angka)
+
+terbilang = konversi_angka(angka)
+print(terbilang)
+
+
+print('======WORD TO NUMBER=======')
+
+def text2int (textnum, numwords={}):
+    if not numwords:
+        units = [
+        ""kosong"", ""satu"", ""dua"", ""tiga"", ""empat"", ""lima"", ""enam"", ""tujuh"", ""delapan"",
+        ""sembilan"", ""sepuluh"", ""sebelas"", ""duabelas"", ""tigabelas"", ""empatbelas"", ""limabelas"",
+        ""enambelas"", ""tujuhbelas"", ""delapanbelas"", ""sembilanbelas"",
+        ]
+
+        tens = ["""", """", ""duapuluh"", ""tigapuluh"", ""empatpuluh"", ""limapuluh"", ""enampuluh"", ""tujuhpuluh"", ""delapanpuluh"", ""sembilanpuluh""]
+
+        scales = [""ratus"", ""ribu"", ""juta"", ""milyar"", ""triliun""]
+
+        numwords[""and""] = (1, 0)
+        for idx, word in enumerate(units):  numwords[word] = (1, idx)
+        for idx, word in enumerate(tens):       numwords[word] = (1, idx * 10)
+        for idx, word in enumerate(scales): numwords[word] = (10 ** (idx * 3 or 2), 0)
+
+    textnum = textnum.replace('-', ' ')
+
+    current = result = 0
+    curstring = """"
+    onnumber = False
+    for word in textnum.split():
+        if word not in numwords:
+             if onnumber:
+                curstring += repr(result + current) + "" ""
+             curstring += word + "" ""
+             result = current = 0
+             onnumber = False
+        else:
+             scale, increment = numwords[word]
+
+             current = current * scale + increment
+             if scale > 100:
+                 result += current
+                 current = 0
+             onnumber = True
+
+    if onnumber:
+        curstring += repr(result + current)
+
+    return curstring
+
+
+masuk = input('Terbilang berapa = ')
+ubah = text2int(masuk)
+print(ubah)"
+9021181722072,"1.
+satuan = ['', 'satu ', 'dua ', 'tiga ', 'empat ', 'lima ', 'enam ', 'tujuh ', 'delapan ', 'sembilan ', 'sepuluh ', 'sebelas ', 'dua belas ', 'tiga belas ', 'empat belas ', 'lima belas ', 'enam belas ', 'tujuh belas ', 'delapan belas ', 'sembilan belas ']
+
+
+def tulis(angka, kelipatan):
+    terbilang = satuan[angka] + kelipatan
+    return terbilang
+
+
+def ratus_puluh_satuan(angka):
+    ratus = angka // 100
+    sisa_ratus = angka % 100
+    puluh = sisa_ratus // 10
+    satuan = angka % 10
+    terbilang = ''
+
+    if(ratus == 1):
+        terbilang += tulis(0, ""seratus "")
+    elif(ratus != 1 and ratus >= 1):
+        terbilang += tulis(ratus, ""ratus "")
+    if (sisa_ratus >= 20):
+        terbilang += tulis(puluh, ""puluh "")
+        terbilang += tulis(satuan, """")
+    elif(sisa_ratus < 20):
+        terbilang += tulis(sisa_ratus, """")
+
+    return terbilang
+
+
+def milyar_juta_ribu(angka):
+    milyar = angka // 1000000000
+    sisa_milyar = angka % 1000000000
+    juta = sisa_milyar // 1000000
+    sisa_juta = sisa_milyar % 1000000
+    ribu = sisa_juta // 1000
+    sisa_ribu = sisa_juta % 1000
+    terbilang = ''
+
+    if(milyar >= 1):
+        terbilang += ratus_puluh_satuan(milyar)
+        terbilang += ""milyar ""
+    if(juta >= 1):
+        terbilang += ratus_puluh_satuan(juta)
+        terbilang += ""juta ""
+    if(ribu > 1):
+        terbilang += ratus_puluh_satuan(ribu)
+        terbilang += ""ribu ""
+    elif(ribu == 1):
+        terbilang += ""seribu ""
+    terbilang += ratus_puluh_satuan(sisa_ribu)
+
+    return terbilang
+
+
+angka = input(""Maskukan Angka :"")
+#pre
+angka = angka.replace(""."","""")
+angka = angka.replace("" "","""")
+if(""%"" in angka):
+    print (""persen"")
+    angka = angka.strip(""%"")
+    if("","" in angka):
+        angka = angka.split(',');
+        terbilang = milyar_juta_ribu(int(angka[0]))+""koma ""+milyar_juta_ribu(int(angka[1]))+""Persen""
+    else:
+        terbilang = milyar_juta_ribu(int(angka))+""Persen""
+elif(""Rp"" in angka):
+    print (""nominal"")
+    angka = angka.strip('Rp')
+    terbilang = milyar_juta_ribu(int(angka))+""Rupiah""
+else:
+    print (""biasa"")
+    terbilang = milyar_juta_ribu(int(angka))
+#terbilang = milyar_juta_ribu(angka)
+print(terbilang)
+
+
+2.
+satuan={"""" : ""0"",""satu"" : ""1"",""dua"":""2"",""tiga"":""3"",""empat"":""4"",""lima"":""5"",""enam"":""6"",""tujuh"":""7"",""delapan"":""8"",""sembilan"":""9"",""sepuluh"":""10"",""sebelas"":""11"",""dua belas"":""12"",""tiga belas"":""13"",""empat belas"":""14"",""lima belas"":""15"",""enam belas"":""16"",""tujuh belas"":""17"",""delapan belas"":""18"",""sembilan belas"":""19""}
+print(satuan['sembilan belas'])
+
+def pecah_ratusan(terbilang):
+    result = """"
+    belasan = False
+    # pre ratusan
+    if(""ratus"" in terbilang) :
+      temp = terbilang.split('ratus')
+      if(""se"" in temp[0]):
+        result += ""1""
+        terbilang = temp[1]
+        print (""masuk ratusan"")
+      else : 
+        result += satuan[temp[0].replace("" "","""")]
+        terbilang = temp[1]
+    else:
+        result += ""0""
+  
+    #pre puluhan / belasan
+    if (""puluh"" in terbilang):
+        temp = terbilang.split('puluh')
+        if(""se"" in temp[0]):
+          result += ""10""
+        else : 
+          result += satuan[temp[0].replace("" "","""")]
+        terbilang = temp[1]
+        
+    elif(""belas"" in terbilang):
+        belasan = True
+        temp = terbilang.split('belas')
+        if(""se"" in temp[0]):
+          result += ""11""
+        else : 
+          result += ""1""+satuan[temp[0].replace("" "","""")]
+        terbilang = temp[1]
+    else:
+      result += ""0""
+    #pre satuan
+    if  (not belasan):
+      result += satuan[terbilang.replace("" "","""")]  
+    return result
+
+def build_result(angka):
+    result = """"
+    found = False
+    for x in angka:
+      if found:
+        result +="".""
+      for z in angka[x]:
+        if z != ""0"":
+          found = True
+        if found :
+          result += z  
+    return result
+
+
+def pecah_milyar(terbilang):
+    jumlah = ['triliun','milyar','juta','ribu','ratus']
+    result={}
+    for x in jumlah :
+      if x == ""ratus"" :
+        result[x] = pecah_ratusan(terbilang)
+      elif(x in terbilang):
+        temp = terbilang.split(x)
+        result[x] = pecah_ratusan(temp[0])
+
+        terbilang = temp[1]
+      else :
+        result[x] = ""000""
+    return build_result(result)
+string = input()
+#pre string
+string = string.lower()
+if  ""rupiah"" in string :
+  string = string.replace(""rupiah"","""")
+  result = ""Rp. ""+pecah_milyar(string)
+elif ""persen"" in string :
+  string = string.replace(""persen"","""")
+  if  ""koma"" in string:
+    string = string.split('koma')
+    result = pecah_milyar(string[0])+"",""+pecah_milyar(string[1])+""%""
+  else:
+    result = pecah_milyar(string)+""%""
+else:  
+  result = pecah_milyar(string)
+print (result)"
+9021281722044,"Membuat fungsi normalisasi dari kata ke angka:
+
+satuan = ['', 'satu ', 'dua ', 'tiga ', 'empat ', 'lima ',
+          'enam ', 'tujuh ', 'delapan ', 'sembilan ', 'sepuluh ', 'sebelas ', 
+          'dua belas ', 'tiga belas ', 'empat belas ', 'lima belas ', 
+          'enam belas ', 'tujuh belas ', 'delapan belas ', 'sembilan belas ']
+
+def tulis(angka, kelipatan):
+    terbilang = satuan[angka] + kelipatan
+    return terbilang
+
+
+def ratus_puluh_satuan(angka):
+    ratus = angka // 100
+    sisa_ratus = angka % 100
+    puluh = sisa_ratus // 10
+    satuan = angka % 10
+    terbilang = ''
+
+    if(ratus == 1):
+        terbilang += tulis(0, ""seratus "")
+    elif(ratus != 1 and ratus >= 1):
+        terbilang += tulis(ratus, ""ratus "")
+    if (sisa_ratus >= 20):
+        terbilang += tulis(puluh, ""puluh "")
+        terbilang += tulis(satuan, """")
+    elif(sisa_ratus < 20):
+        terbilang += tulis(sisa_ratus, """")
+
+    return terbilang
+
+
+def milyar_juta_ribu(angka):
+    milyar = angka // 1000000000
+    sisa_milyar = angka % 1000000000
+    juta = sisa_milyar // 1000000
+    sisa_juta = sisa_milyar % 1000000
+    ribu = sisa_juta // 1000
+    sisa_ribu = sisa_juta % 1000
+    terbilang = ''
+
+    if(milyar >= 1):
+        terbilang += ratus_puluh_satuan(milyar)
+        terbilang += ""milyar ""
+    if(juta >= 1):
+        terbilang += ratus_puluh_satuan(juta)
+        terbilang += ""juta ""
+    if(ribu > 1):
+        terbilang += ratus_puluh_satuan(ribu)
+        terbilang += ""ribu ""
+    elif(ribu == 1):
+        terbilang += ""seribu ""
+    terbilang += ratus_puluh_satuan(sisa_ribu)
+
+    return terbilang
+
+angka = input(""Input : "")
+
+for j in range (len(angka)):
+    if j==0:
+        if angka[len(angka)-1] == '%':
+            cariKoma = angka.find(',')
+            if cariKoma >= 0 and cariKoma < len(angka):
+                if '0' in angka :
+                    #print(""RUN"")
+                    sv = angka.index(',')
+                    sb = angka[0:sv]
+                    st = angka[sv+1:len(angka)]
+                    sh = st.replace('%','')
+                    terbilang1 = milyar_juta_ribu(int(sb))
+                    terbilang2 = milyar_juta_ribu(int(sh))
+                    if '0' in sb and '0' in st :
+                        if angka[sv-1] == '0' and angka[sv+1] == '0' :
+                            #print(""TRUE"")
+                            str1 = terbilang1
+                            str1 += ""koma ""
+                            str1 += ""nol""
+                            str2 = terbilang2
+                            str2 += ""persen""
+                            print(""Output : "",str1,str2)
+                        else:
+                            #print(""TRUE JUGA"")
+                            str1 = terbilang1
+                            str1 += ""koma""
+                            str2 = terbilang2.replace('puluh ','')
+                            str2 += ""persen""
+                            print(""Output : "",str1,str2)
+                    elif '0' in sb :
+                        if angka[sv-1] == '0' :
+                            str1 = terbilang1
+                            str1 += ""koma""
+                            str2 = terbilang2.replace('puluh ','')
+                            str2 += ""persen""
+                            print(""Output : "",str1,str2)
+                    else :
+                        if angka[sv+1] == '0' :
+                            str1 = terbilang1
+                            str1 += ""koma ""
+                            str1 += ""nol""
+                            str2 = terbilang2
+                            str2 += ""persen""
+                            print(""Output : "",str1,str2)
+                        else :
+                            str1 = terbilang1.replace('puluh ','')
+                            str1 += ""koma""
+                            str2 = terbilang2.replace('puluh ','')
+                            str2 += ""persen""
+                            print(""Output : "",str1,str2)             
+                else :
+                    sv = angka.index(',')
+                    sb = angka[0:sv]
+                    st = angka[sv+1:len(angka)]
+                    sh = st.replace('%','')
+                    terbilang1 = milyar_juta_ribu(int(sb))
+                    terbilang2 = milyar_juta_ribu(int(sh))
+                    str1 = terbilang1.replace('puluh ','')
+                    str1 += ""koma""
+                    str2 = terbilang2.replace('puluh ','')
+                    str2 += ""persen""
+                    print(""Output : "",str1,str2)
+                
+            else:
+                sh = angka.replace('%','')
+                terbilang3 = milyar_juta_ribu(int(sh))
+                str3 = terbilang3.replace('puluh ','')
+                str3 += ""persen""
+                print(""Output : "",str3)
+        elif angka[0] == 'R':
+            for char in angka:
+                if char in "" ."":
+                    rs = angka.replace(char,'')
+                    rp = rs.replace('Rp','')
+                    terbilang = milyar_juta_ribu(int(rp))
+                    terbilang += ""rupiah""
+                    break
+            print(""Output : "",terbilang)
+        else:
+            for char in angka:
+                if char in "" ."":
+                    rs = angka.replace(char,'')
+                    terbilang = milyar_juta_ribu(int(rs))
+                    break
+            print(""Output : "",terbilang)
+    
+Membuat fungsi normalisasi dari angka ke kata:
+
+def formatrupiah(uang): 
+    y = str(uang)
+    if len(y) <= 3:
+        return 'Rp. '+ y
+    else:
+        p = y[-3:]
+        q = y[:-3]
+        return   formatrupiah(q) + '.' + p
+        print('Rp ' +  formatrupiah(q) + '.' + p)
+
+dictionaries = {
+        ""nol"":0,
+        ""satu"":1,
+        ""dua"":2,
+        ""tiga"":3,
+        ""empat"":4,
+        ""lima"":5,
+        ""enam"":6,
+        ""tujuh"":7,
+        ""delapan"":8,
+        ""sembilan"":9,
+        ""sepuluh"":10,
+        ""sebelas"":11,
+        ""belas"":10,
+        ""puluh"":10,
+        ""seratus"":100,
+        ""seribu"":1000,
+        ""ratus"":100,
+        ""ribu"":1000,
+        ""juta"":1000000,
+        ""milyar"":1000000000,
+        ""triliun"":1000000000000
+}
+
+place_value = [""puluh"",""ratus"",""ribu"",""juta"",""milyar"",""triliun""]
+value = [""seratus"",""seribu"",""sejuta"",""sebelas""]
+
+terbilang = input(""Input : "")
+
+words = terbilang.split()
+total = []
+total2 = []
+sum = 0
+sum2 = 0
+cek = False
+if words[-1] == 'rupiah' :
+    words.remove('rupiah')
+    for i,j in enumerate(words) :
+        temp = dictionaries[j]
+        if j in place_value :
+            if cek == True:
+                total[len(total)-1]*=temp
+            else:
+                sum *= temp
+                total.append(sum)
+                sum = 0
+            cek = True
+            continue
+        elif j in value :
+            total.append(temp)
+            cek = True
+            continue
+        else:
+            sum += temp
+            cek = False
+        if i == len(words)-1 :
+            total.append(sum)
+    
+    for x in range(2):
+        for i in range(len(total)-1,0,-1):
+            diff = len(str(total[i])) - len(str(total[i-1]))
+            if diff >0:
+                total[i-1] = total[i-1]*(10**(diff+1))
+        output = 0
+    for item in total :
+        output += item
+             
+    print(""Output : "",formatrupiah(output))
+
+elif words[-1] == 'persen' :
+    search = terbilang.find(""koma"")
+    hasil1 = """"
+    hasil2 = """"
+    if search != -1:
+        words.remove('persen')
+        koma = terbilang.index('koma')
+        words.remove('koma')
+        word = terbilang[0:koma].split()
+        #print(word)
+        for i,j in enumerate(word) :
+            temp = dictionaries[j]
+            vlue = str(temp)
+            #print(""Ini temp : "",vlue)
+            hasil1 += vlue
+            if j in place_value :
+                sum *= temp
+                total.append(sum)
+                sum = 0
+                continue
+            elif j in value :
+                total.append(temp)
+                continue
+            sum += temp
+            if i == len(word)-1 :
+                total.append(sum)
+            
+        for x in range(2):
+            for i in range(1,len(total)):
+                diff = len(str(total[i])) - len(str(total[i-1]))
+                if diff >0:
+                    total[i-1] = total[i-1]*(10**(diff+1))
+            output1 = 0
+        for item in total :
+            
+            if terbilang.find(""puluh"") != -1 :
+                output1 += item
+            else :
+            
+                break
+                #print(""INI HASIL : "",hasil1)
+        
+        word2 = terbilang[koma:len(terbilang)].split()
+        word2.remove('koma')
+        word2.remove('persen')
+        #print(word2)
+        for i,j in enumerate(word2) :
+            temp = dictionaries[j]
+            vlue2 = str(temp)
+            #print(""Ini temp : "",vlue2)
+            hasil2 += vlue2
+            if j in place_value :
+                sum2 *= temp
+                total2.append(sum2)
+                sum2 = 0
+                continue
+            elif j in value :
+                total2.append(temp)
+                continue
+            sum2 += temp
+            if i == len(word2)-1 :
+                total2.append(sum2)
+            
+        for x in range(2):
+            for i in range(1,len(total2)):
+                diff = len(str(total2[i])) - len(str(total2[i-1]))
+                if diff >0:
+                    total2[i-1] = total2[i-1]*(10**(diff+1))
+            output2 = 0
+        for item in total2 :
+            if terbilang.find(""puluh"") != -1 :
+                output2 += item
+            else :
+                break
+                #print(""INI HASIL : "",hasil2)
+        
+        if terbilang.find(""puluh"") != -1 :
+            if terbilang.index(""puluh"") < search :
+                print(""Output : "",str(output1)+','+hasil2+'%')
+            elif terbilang.index(""puluh"") > search :
+                print(""Output : "",hasil1+','+str(output2)+'%')
+            else :
+                print(""Output : "",str(output1)+','+str(output2)+'%')
+            
+        else :
+            print(""Output : "",hasil1+','+hasil2+'%')
+        
+    else :
+        words.remove('persen')
+        for i,j in enumerate(words) :
+            temp = dictionaries[j]
+            if j in place_value :
+                sum *= temp
+                total.append(sum)
+                sum = 0
+                continue
+            elif j in value :
+                total.append(temp)
+                continue
+            sum += temp
+            if i == len(words)-1 :
+                total.append(sum)
+        
+        for x in range(2):
+            for i in range(1,len(total)):
+                diff = len(str(total[i])) - len(str(total[i-1]))
+                if diff >0:
+                    total[i-1] = total[i-1]*(10**(diff+1))
+            output = 0
+        for item in total :
+            output += item
+             
+        print(""Output : "",str(output)+'%')
+    
+
+else:
+    for i,j in enumerate(words) :
+        temp = dictionaries[j]
+        if j in place_value :
+            if cek == True:
+                total[len(total)-1]*=temp
+            else:
+                sum *= temp
+                total.append(sum)
+                sum = 0
+            cek = True
+            continue
+        elif j in value :
+            total.append(temp)
+            cek = True
+            continue
+        else:
+            sum += temp
+            cek = False
+        if i == len(words)-1 :
+            total.append(sum)
+    
+    for x in range(2):
+        for i in range(len(total)-1,0,-1):
+            diff = len(str(total[i])) - len(str(total[i-1]))
+            if diff >0:
+                total[i-1] = total[i-1]*(10**(diff+1))
+        output = 0
+    for item in total :
+        output += item
+         
+    print(""Output : "",formatrupiah(output).replace('Rp. ',''))"
+9021281722059,"#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+""""""
+Created on Tue Feb  4 11:11:39 2020
+
+@author: yaya
+""""""
+satuan = ['nol ','satu ','dua ','tiga ','empat ','lima ',
+          'enam ','tujuh ','delapan ','sembilan ']
+
+def num_to_type(angka):
+    #satuan
+    if(angka<10):
+        return satuan[angka]
+    #belasan
+    elif(angka>10 and angka<20):
+        first = satuan[angka%10]
+        if (first == 'satu '):
+            first = 'se'
+        return first + 'belas '
+    #puluhan
+    elif(angka>=10 and angka<=99):
+        first = satuan[angka//10]
+        last = ''
+        if (first == 'satu '):
+            first = 'se'
+        if (angka % 10 > 0):
+            last = num_to_type(angka % 10)
+        return first + 'puluh ' + last
+    #ratusan
+    elif(angka>=100 and angka<1000):
+        first = satuan[angka//100]
+        last = ''
+        if(first == 'satu '):
+            first = 'se'
+        if(angka % 100 > 0):
+            last = num_to_type(angka % 100)
+        return first + 'ratus ' + last
+    #ribuan
+    elif(angka>=1000 and angka<1000000):
+        first = ''
+        last = ''
+        temp = angka//1000
+        if(temp < 10):
+            if(temp == 1):
+                first = 'se'
+            else:
+                first = satuan[temp]
+        if(temp >= 10):
+            first = num_to_type(angka//1000)
+        if(angka % 1000 > 0):
+            last = num_to_type(angka % 1000)
+        return first + 'ribu ' + last
+    #jutaan
+    elif(angka>=1000000 and angka<1000000000):
+        first = ''
+        last = ''
+        temp = angka // 1000000
+        if(temp < 10):
+            first = satuan[temp]
+        if(temp >= 10):
+            first = num_to_type(angka//1000000)
+        if(angka % 1000000 > 0):
+            last = num_to_type(angka % 1000000)
+        return first + 'juta ' + last
+    #milyar
+    elif(angka>=1000000000 and angka<1000000000000):
+        first = ''
+        last = ''
+        temp = angka // 1000000000
+        if(temp < 10):
+            first = satuan[temp]
+        if(temp >= 10):
+            first = num_to_type(angka//1000000000)
+        if(angka % 1000000000 > 0):
+            last = num_to_type(angka % 1000000000)
+        return first + 'milyar ' + last
+
+angka = int(input(""Maskukan Angka :""))
+print(num_to_type(angka))
+
+angka1 = '56,7%'
+split1 = angka1.split(',')
+split2 = split1[1].split('%')
+print(num_to_type((int(split1[0]))) + 'koma ' 
+      + num_to_type((int(split2[0]))) + 'persen')
+
+angka2 = 'Rp. 100.540.321'
+new = (angka2.replace(""."","""")).split()
+print(num_to_type(int(new[1])) + 'Rupiah')
+
+angka3 = '100.540.321'
+conv = int(angka3.replace(""."",""""))
+print(num_to_type(conv))"
+9021281722052,"def num2words(num):
+	under_20 = ['Nol','Satu','Dua','Tiga','Empat','Lima','Enam','Tujuh','Delapan','Sembilan','Sepuluh','Sebelas','Dua Belas','Tiga Belas','Empat Belas','Lima Belas','Enam Belas','Tujuh Belas','Delapan Belas','Sembilan Belas']
+	tens = ['Dua Puluh','Tiga Puluh','Empat Puluh','Lima Puluh','Enam Puluh','Tujuh Puluh','Delapan Puluh','Sembilan Puluh']
+	above_100 = {100: 'Ratus',1000:'Ribu', 1000000:'Juta', 1000000000:'Miliar'}
+ 
+	if num < 20:
+		 return under_20[num]
+	
+	if num < 100:
+		return tens[(int)(num/10)-2] + ('' if num%10==0 else ' ' + under_20[num%10])
+ 
+	pivot = max([key for key in above_100.keys() if key <= num])
+ 
+	return num2words((int)(num/pivot)) + ' ' + above_100[pivot] + ('' if num%pivot==0 else ' ' + num2words(num%pivot))
+
+print(num2words(1094243))
+
+def words2num (textnum, numwords={}):
+    if not numwords:
+        units = [
+        ""nol"", ""satu"", ""dua"", ""tiga"", ""empat"", ""lima"", ""enam"", ""tujuh"", ""delapan"",
+        ""sembilan"", ""sepuluh"", ""sebelas"", ""duabelas"", ""tigabelas"", ""empatbelas"", ""limabelas"",
+        ""enambelas"", ""tujuhbelas"", ""delapanbelas"", ""sembilanbelas"",
+        ]
+
+        tens = ["""", """", ""duapuluh"", ""tigapuluh"", ""empatpuluh"", ""limapuluh"", ""enampuluh"", ""tujuhpuluh"", ""delapanpuluh"", ""sembilanpuluh""]
+
+        scales = [""ratus"", ""ribu"", ""juta"", ""milyar"", ""triliun""]
+
+        numwords[""and""] = (1, 0)
+        for idx, word in enumerate(units):  numwords[word] = (1, idx)
+        for idx, word in enumerate(tens):       numwords[word] = (1, idx * 10)
+        for idx, word in enumerate(scales): numwords[word] = (10 ** (idx * 3 or 2), 0)
+
+    textnum = textnum.replace('-', ' ')
+
+    current = result = 0
+    curstring = """"
+    onnumber = False
+    for word in textnum.split():        
+        if word not in numwords:
+             if onnumber:
+                curstring += repr(result + current) + "" ""
+             curstring += word + "" ""
+             result = current = 0
+             onnumber = False
+        else:
+             scale, increment = numwords[word]
+
+             current = current * scale + increment
+             if scale > 100:
+                 result += current
+                 current = 0
+             onnumber = True
+
+    if onnumber:
+        curstring += repr(result + current)
+
+    return curstring
+
+print(words2num(""dua ratus sebelas juta enampuluh empat ribu tiga ratus enampuluh""))"
+9021281722065,"Number to Word:
+
+# -*- coding: utf-8 -*-
+""""""
+Created on Wed Feb  5 00:29:16 2020
+
+@author: Khairi
+""""""
+
+satuan = ['nol ','satu ','dua ','tiga ','empat ','lima ',
+          'enam ','tujuh ','delapan ','sembilan ']
+
+def num_to_type(angka):
+    #satuan
+    if(angka<10):
+        return satuan[angka]
+    #belasan
+    elif(angka>10 and angka<20):
+        first = satuan[angka%10]
+        if (first == 'satu '):
+            first = 'se'
+        return first + 'belas '
+    #puluhan
+    elif(angka>=10 and angka<=99):
+        first = satuan[angka//10]
+        last = ''
+        if (first == 'satu '):
+            first = 'se'
+        if (angka % 10 > 0):
+            last = num_to_type(angka % 10)
+        return first + 'puluh ' + last
+    #ratusan
+    elif(angka>=100 and angka<1000):
+        first = satuan[angka//100]
+        last = ''
+        if(first == 'satu '):
+            first = 'se'
+        if(angka % 100 > 0):
+            last = num_to_type(angka % 100)
+        return first + 'ratus ' + last
+    #ribuan
+    elif(angka>=1000 and angka<1000000):
+        first = ''
+        last = ''
+        temp = angka//1000
+        if(temp < 10):
+            if(temp == 1):
+                first = 'se'
+            else:
+                first = satuan[temp]
+        if(temp >= 10):
+            first = num_to_type(angka//1000)
+        if(angka % 1000 > 0):
+            last = num_to_type(angka % 1000)
+        return first + 'ribu ' + last
+    #jutaan
+    elif(angka>=1000000 and angka<1000000000):
+        first = ''
+        last = ''
+        temp = angka // 1000000
+        if(temp < 10):
+            first = satuan[temp]
+        if(temp >= 10):
+            first = num_to_type(angka//1000000)
+        if(angka % 1000000 > 0):
+            last = num_to_type(angka % 1000000)
+        return first + 'juta ' + last
+    #milyar
+    elif(angka>=1000000000 and angka<1000000000000):
+        first = ''
+        last = ''
+        temp = angka // 1000000000
+        if(temp < 10):
+            first = satuan[temp]
+        if(temp >= 10):
+            first = num_to_type(angka//1000000000)
+        if(angka % 1000000000 > 0):
+            last = num_to_type(angka % 1000000000)
+        return first + 'milyar ' + last
+
+angka = int(input(""Masukkan Angka :""))
+print(num_to_type(angka))
+
+angka1 = '51,7%'
+split1 = angka1.split(',')
+split2 = split1[1].split('%')
+print(num_to_type((int(split1[0]))) + 'koma ' 
+      + num_to_type((int(split2[0]))) + 'persen')
+
+angka2 = 'Rp. 100.540.321'
+new = (angka2.replace(""."","""")).split()
+print(num_to_type(int(new[1])) + 'Rupiah')
+
+angka3 = '100.540.321'
+conv = int(angka3.replace(""."",""""))
+print(num_to_type(conv))
+
+Word to Number:
+
+# -*- coding: utf-8 -*-
+""""""
+Created on Tue Feb  4 21:47:50 2020
+
+@author: Khairi
+""""""
+
+def text2int (textnum, numwords={}):
+    if not numwords:
+        units = [
+        ""kosong"", ""satu"", ""dua"", ""tiga"", ""empat"", ""lima"", ""enam"", ""tujuh"", ""delapan"",
+        ""sembilan"", ""sepuluh"", ""sebelas"", ""duabelas"", ""tigabelas"", ""empatbelas"", ""limabelas"",
+        ""enambelas"", ""tujuhbelas"", ""delapanbelas"", ""sembilanbelas"",
+        ]
+
+        tens = ["""", """", ""duapuluh"", ""tigapuluh"", ""empatpuluh"", ""limapuluh"", ""enampuluh"", ""tujuhpuluh"", ""delapanpuluh"", ""sembilanpuluh""]
+
+        scales = [""ratus"", ""ribu"", ""juta"", ""milyar"", ""triliun""]
+
+        numwords[""and""] = (1, 0)
+        for idx, word in enumerate(units):  numwords[word] = (1, idx)
+        for idx, word in enumerate(tens):       numwords[word] = (1, idx * 10)
+        for idx, word in enumerate(scales): numwords[word] = (10 ** (idx * 3 or 2), 0)
+
+    textnum = textnum.replace('-', ' ')
+
+    current = result = 0
+    curstring = """"
+    onnumber = False
+    for word in textnum.split():        
+        if word not in numwords:
+             if onnumber:
+                curstring += repr(result + current) + "" ""
+             curstring += word + "" ""
+             result = current = 0
+             onnumber = False
+        else:
+             scale, increment = numwords[word]
+
+             current = current * scale + increment
+             if scale > 100:
+                 result += current
+                 current = 0
+             onnumber = True
+
+    if onnumber:
+        curstring += repr(result + current)
+
+    return curstring
+
+
+masuk = input('Masukkan Nominal = ')
+ubah = text2int(masuk)
+print(ubah)
+
+nominal3 = 'satu juta lima ratus'
+ubah = text2int(nominal3)
+print(ubah)
+"
+9021181722081,"# BERIKUT ADALAH CODE DARI ANGKA KE TEXT
+
+satuan = ['', 'satu ', 'dua ', 'tiga ', 'empat ', 'lima ',
+          'enam ', 'tujuh ', 'delapan ', 'sembilan ', 'sepuluh ', 'sebelas ', 
+          'dua belas ', 'tiga belas ', 'empat belas ', 'lima belas ', 
+          'enam belas ', 'tujuh belas ', 'delapan belas ', 'sembilan belas ']
+
+def tulis(angka, kelipatan):
+    terbilang = satuan[angka] + kelipatan
+    return terbilang
+
+
+def ratus_puluh_satuan(angka):
+    ratus = angka // 100
+    sisa_ratus = angka % 100
+    puluh = sisa_ratus // 10
+    satuan = angka % 10
+    terbilang = ''
+
+    if(ratus == 1):
+        terbilang += tulis(0, ""seratus "")
+    elif(ratus != 1 and ratus >= 1):
+        terbilang += tulis(ratus, ""ratus "")
+    if (sisa_ratus >= 20):
+        terbilang += tulis(puluh, ""puluh "")
+        terbilang += tulis(satuan, """")
+    elif(sisa_ratus < 20):
+        terbilang += tulis(sisa_ratus, """")
+
+    return terbilang
+
+
+def milyar_juta_ribu(angka):
+    milyar = angka // 1000000000
+    sisa_milyar = angka % 1000000000
+    juta = sisa_milyar // 1000000
+    sisa_juta = sisa_milyar % 1000000
+    ribu = sisa_juta // 1000
+    sisa_ribu = sisa_juta % 1000
+    terbilang = ''
+
+    if(milyar >= 1):
+        terbilang += ratus_puluh_satuan(milyar)
+        terbilang += ""milyar ""
+    if(juta >= 1):
+        terbilang += ratus_puluh_satuan(juta)
+        terbilang += ""juta ""
+    if(ribu > 1):
+        terbilang += ratus_puluh_satuan(ribu)
+        terbilang += ""ribu ""
+    elif(ribu == 1):
+        terbilang += ""seribu ""
+    terbilang += ratus_puluh_satuan(sisa_ribu)
+
+    return terbilang
+  
+def konversi_to_text(input):
+  kamus_desimal = {
+    ""0"":"""",""1"" : ""satu "",""2"" : ""dua "",""3"" : ""tiga "",""4"" : ""empat "",""5"" : ""lima "",""6"" : ""enam "",""7"" : ""tujuh "",""8"" : ""delapan "",""9"" : ""sembilan ""}
+  data = input.lower()  
+  terbilang = """"
+  if(""rp."" in data):
+    data = data.replace(""rp."","""")
+    data = data.replace(""."","""")
+    terbilang = milyar_juta_ribu(int(data)) 
+    terbilang += ""rupiah""
+    output = terbilang
+  elif("","" in data):
+    cek = False
+    if(""%"" in data):
+      cek = True
+      data = data.replace(""%"","""")
+    terbilang = []
+    box = data.split("","")
+    if int(box[0])==0:
+      terbilang.append(""nol "")
+    else:
+      terbilang.append(milyar_juta_ribu(int(box[0])))
+    temp = """"
+    for item in box[1]:
+      temp+= kamus_desimal[item]
+    terbilang.append(temp)
+    output = terbilang[0]+""koma ""+terbilang[1]
+    if(cek):
+      output = output+""persen""
+  else:
+    output = milyar_juta_ribu(int(data))
+  return output
+
+input = [""Rp.1.213.456"",""9,27%"",""100,20%"",""Rp.97"",""88"",""182371"",""9,28"",""91,872%"",""9123""]
+
+print(""Konversi Angka ke Text"")
+print(""List input :"",input)
+for item in input:
+  print(item,"" = "",konversi_to_text(item))
+
+
+# BERIKUT ADALAH CODE UNTUK TEXT KE ANGKA
+print(""\n\n\nKonversi Text ke Angka"")
+kamus_angka = {
+    ""satu"":1,
+    ""dua"":2,
+    ""tiga"":3,
+    ""empat"":4,
+    ""lima"":5,
+    ""enam"":6,
+    ""tujuh"":7,
+    ""delapan"":8,
+    ""sembilan"":9,
+    ""sepuluh"":10,
+    ""sebelas"":11,
+    ""belas"":10,
+    ""puluh"":10,
+    ""seratus"":100,
+    ""seribu"":1000,
+    ""sejuta"":1000000,
+    ""ratus"":100,
+    ""ribu"":1000,
+    ""juta"":1000000,
+    ""milyar"":1000000000,
+    ""triliun"":1000000000000
+}
+
+marker = [""puluh"",""ratus"",""ribu"",""juta"",""milyar"",""triliun""]
+angka_khusus = [""seratus"",""seribu"",""sejuta"",""sebelas""]
+
+def konversi_to_angka(input):
+  input = input.lower()
+  data = input.split()
+  total =[]
+  sum = 0
+  cek_marker = False
+  for index,item in enumerate(data):
+    mark = kamus_angka[item]
+    if item in marker:
+      if cek_marker == True:
+        total[len(total)-1]*=mark
+      else:
+        sum*=mark
+        total.append(sum)
+        sum=0
+      cek_marker = True
+      continue
+    elif item in angka_khusus:
+      total.append(mark)
+      cek_marker = True
+      continue
+    else:
+      sum+=mark
+      cek_marker = False
+    if index == len(data)-1 :
+      total.append(sum)
+  for index in range(len(total)-1,0,-1):
+    selisih = len(str(total[index])) - len(str(total[index-1]))
+    if selisih > 0:
+      total[index-1] = total[index-1]*(10**(selisih+1))
+  output = 0
+  for item in total:
+    output+=item
+  return output
+
+def format_titik(input):
+  count = 0
+  input = str(input)
+  output = """"
+  for index in range(len(input)-1,-1,-1):
+    count+=1
+    if(count == 4):
+      output = input[index]+"".""+output
+      count = 1
+    else:
+      output = input[index]+ output
+  return output
+
+def konversi_koma(input):
+  input = input.lower()
+  output = []
+  data = input.split(""koma"")
+  if(data[0].replace("" "","""")==""nol""):
+    output.append(""0"")
+  else:
+    output.append(str(konversi_to_angka(data[0])))
+  terbilang =""""
+  data[1] = data[1].split()
+  for item in data[1]:
+    terbilang = terbilang+str(kamus_angka[item])
+  output.append(terbilang)
+  return output[0]+"",""+output[1]
+
+input = [""nol koma tujuh lima persen"",""satu juta dua ratus tiga belas ribu empat ratus lima puluh enam"",""sejuta dua ratus dua puluh ribu tiga puluh sembilan rupiah"",""seratus dua puluh ribu rupiah "",""seratus dua puluh juta rupiah"",""sembilan ratus sembilan puluh tujuh koma dua satu persen""]
+print(""input =>"",input)
+for item in input:
+  cek = 0;
+  output = """"
+  if ""rupiah"" in item:
+    cek = 1;
+    item = item.replace(""rupiah"","""")
+  if ""persen"" in item:
+    cek = 2;
+    item = item.replace(""persen"","""")
+
+  if(""koma"" in item):
+    output = konversi_koma(item)
+  else:
+    angka = konversi_to_angka(item)
+    format_angka = format_titik(angka)
+    output = format_angka
+  
+  if cek==1:
+    print(""Rp.""+str(output))
+  elif cek==2:
+    print(str(output)+""%"")
+  else:
+    print(output)"
+9021281722042,"# -*- coding: utf-8 -*-
+""""""
+Created on Tue Feb  4 20:28:08 2020
+
+@author: asus
+""""""
+
+def text2int (textnum, numwords={}):
+    if not numwords:
+        units = [
+        ""kosong"", ""satu"", ""dua"", ""tiga"", ""empat"", ""lima"", ""enam"", ""tujuh"", ""delapan"",
+        ""sembilan"", ""sepuluh"", ""sebelas"", ""duabelas"", ""tigabelas"", ""empatbelas"", ""limabelas"",
+        ""enambelas"", ""tujuhbelas"", ""delapanbelas"", ""sembilanbelas"",
+        ]
+
+        tens = ["""", """", ""duapuluh"", ""tigapuluh"", ""empatpuluh"", ""limapuluh"", ""enampuluh"", ""tujuhpuluh"", ""delapanpuluh"", ""sembilanpuluh""]
+
+        scales = [""ratus"", ""ribu"", ""juta"", ""milyar"", ""triliun""]
+
+        numwords[""and""] = (1, 0)
+        for idx, word in enumerate(units):  numwords[word] = (1, idx)
+        for idx, word in enumerate(tens):       numwords[word] = (1, idx * 10)
+        for idx, word in enumerate(scales): numwords[word] = (10 ** (idx * 3 or 2), 0)
+
+    textnum = textnum.replace('-', ' ')
+
+    current = result = 0
+    curstring = """"
+    onnumber = False
+    for word in textnum.split():        
+        if word not in numwords:
+             if onnumber:
+                curstring += repr(result + current) + "" ""
+             curstring += word + "" ""
+             result = current = 0
+             onnumber = False
+        else:
+             scale, increment = numwords[word]
+
+             current = current * scale + increment
+             if scale > 100:
+                 result += current
+                 current = 0
+             onnumber = True
+
+    if onnumber:
+        curstring += repr(result + current)
+
+    return curstring
+
+
+masuk = input('Masukkan angka = ')
+kata = text2int(masuk)
+print(kata)"
+9021281722041,"1. Number to Words
+
+# -*- coding: utf-8 -*-
+""""""
+Created on Tue Feb  4 22:44:03 2020
+
+@author: Andika
+""""""
+
+satuan = ['', 'satu ', 'dua ', 'tiga ', 'empat ', 'lima ',
+          'enam ', 'tujuh ', 'delapan ', 'sembilan ', 'sepuluh ', 
+          'sebelas ', 'dua belas ', 'tiga belas ', 'empat belas ', 
+          'lima belas ', 'enam belas ', 'tujuh belas ', 'delapan belas ', 
+          'sembilan belas ']
+
+
+def tulis(angka, kelipatan):
+    terbilang = satuan[angka] + kelipatan
+    return terbilang
+
+
+def ratus_puluh_satuan(angka):
+    ratus = angka // 100
+    sisa_ratus = angka % 100
+    puluh = sisa_ratus // 10
+    satuan = angka % 10
+    terbilang = ''
+
+    if(ratus == 1):
+        terbilang += tulis(0, ""seratus "")
+    elif(ratus != 1 and ratus >= 1):
+        terbilang += tulis(ratus, ""ratus "")
+    if (sisa_ratus >= 20):
+        terbilang += tulis(puluh, ""puluh "")
+        terbilang += tulis(satuan, """")
+    elif(sisa_ratus < 20):
+        terbilang += tulis(sisa_ratus, """")
+
+    return terbilang
+
+
+def milyar_juta_ribu(angka):
+    milyar = angka // 1000000000
+    sisa_milyar = angka % 1000000000
+    juta = sisa_milyar // 1000000
+    sisa_juta = sisa_milyar % 1000000
+    ribu = sisa_juta // 1000
+    sisa_ribu = sisa_juta % 1000
+    terbilang = ''
+
+    if(milyar >= 1):
+        terbilang += ratus_puluh_satuan(milyar)
+        terbilang += ""milyar ""
+    if(juta >= 1):
+        terbilang += ratus_puluh_satuan(juta)
+        terbilang += ""juta ""
+    if(ribu > 1):
+        terbilang += ratus_puluh_satuan(ribu)
+        terbilang += ""ribu ""
+    elif(ribu == 1):
+        terbilang += ""seribu ""
+    terbilang += ratus_puluh_satuan(sisa_ribu)
+
+    return terbilang
+
+angka = int(input(""Maskukan Angka :""))
+terbilang = milyar_juta_ribu(angka)
+print(terbilang)
+
+2. Words to Number
+
+# -*- coding: utf-8 -*-
+""""""
+Created on Wed Feb  5 00:24:01 2020
+
+@author: Andika
+""""""
+
+numbers = {""zero"":0, ""one"":1, ""two"":2, ""three"":3, ""four"":4, ""five"":5, ""six"":6, ""seven"":7,
+ ""eight"":8, ""nine"":9, ""ten"":10, ""eleven"":11, ""twelve"":12, ""thirteen"":13, ""fourteen"":14,
+ ""fifteen"":15, ""sixteen"":16, ""seventeen"":17, ""eighteen"":18,"" nineteen"":19, ""twenty"":20,
+ ""thirty"":30, ""forty"":40, ""fifty"":50, ""sixty"":60, ""seventy"":70, ""eighty"":80, ""ninety"":90,
+ ""hundred"":100, ""thousand"":1000, ""million"":1000000, ""billion"":1000000000, ""point"":111,
+ ""trillion"":1000000000000}
+
+lis = []
+def word2num(x):
+   num = 0
+   num1 = """"
+   point = 0
+   for i in x:
+     if i in numbers:
+           if numbers[i] < 100: 
+              num = num + numbers[i]
+           elif numbers[i] == 100:
+              num = num * numbers[i]
+           elif numbers[i] == 111:
+              lis.append(num)
+              point = 1
+              j = x.index(i)
+              k = x[(j+1)]
+              for o in k:
+                if o in numbers:             
+                  num1 += str(numbers[o])    
+                else:
+                  pass
+           else:
+              num = num * numbers[i]
+              lis.append(num)
+              num = 0
+     else:
+       pass
+   j = 0
+   if point:
+        o = int(num1)
+        p = len(num1)
+        num = o/10**p
+        while j < len(lis):
+          num = num + lis[j]
+          j = j + 1
+   else:
+        while j < len(lis):
+          num = num + lis[j]
+          j = j + 1
+   return(num)
+   
+your_input = (((((input(""Tuliskan Angkamu Menggunakan Kata Bahasa Inggris : "")).lower()).replace("","","" "")).replace(""-"","" "")).replace(""."","" ""))
+word2number = (your_input).split("" "")
+print(word2num(word2number))
+
+"
+9021281722055,"# -*- coding: utf-8 -*-
+""""""
+Created on Tue Feb  4 20:59:30 2020
+
+@author: Otto Tirtayasa Akbar
+""""""
+import re
+
+def remove_titik(angka):
+    hasil = []
+    temp = ''
+    idx=0
+    for a in angka:
+        if(re.findall(""\d"",a)):
+            temp+=a
+        elif(a==','):
+            hasil.append(int(temp))
+            temp=''
+            hasil.append('Koma')
+        else:
+            hasil.append(int(temp))
+            temp=''
+        if(idx == len(angka)-1):
+            hasil.append(int(temp))
+        idx+=1
+    return hasil
+
+def pisah(array_angka):
+    blkng = []
+    elm=0
+    for a in array_angka:
+        if(a== 'Koma'):
+            blkng.append(a)
+            blkng.append(array_angka[elm+1])
+            array_angka.remove(array_angka[elm])
+            array_angka.remove(array_angka[elm])
+            break
+        elm+=1
+    return blkng
+
+def angka2kata(angka):
+    besaran = ['', '', 'Ribu ', 'Juta ', 'Milyar ', 'Triliun ', 'Kuadriliun ', 'Kuantiliun ', 'Sekstiliun ', 'Septiliun ', 'Oktiliun ', 'Noniliun ', 'Desiliun ']
+    satuan = ['' , 'Satu ', 'Dua ', 'Tiga ','Empat ', 'Lima ', 'Enam ', 'Tujuh ', 'Delapan ', 'Sembilan ']
+    angka= remove_titik(angka)
+    blkng_koma = pisah(angka)
+    kalimat = ''
+    titik=len(angka)
+    for a in angka:
+        if(int(a/100) == 1):
+            kalimat +='Seratus '
+            a= a%100
+        elif(int(a/100) > 1 ):
+            kalimat += satuan[int(a/100)]+'Ratus '
+            a= a%100
+        
+        if(int(a/10)>1):
+            kalimat += satuan[int(a/10)]+'Puluh '
+            a= (a%10)
+        elif(int(a/10)==1):
+            a%=10
+            if(a == 0):
+                kalimat += 'Sepuluh '
+                a-=a
+            elif(a == 1):
+                kalimat += 'Sebelas '
+                a-=a
+            else:
+                kalimat += satuan[int(a)]+'Belas '
+                a-=a
+        kalimat += satuan[int(a)]
+        kalimat += besaran[titik]
+        titik-=1
+    
+    for a in blkng_koma:
+        if(a=='Koma'):
+            kalimat+= a+' '
+        else:
+            for b in str(a):
+                kalimat += satuan[int(b)]
+    return kalimat
+
+def kata2angka(kalimat):
+    dictangka = {
+            'satu':1,
+            'dua':2,
+            'tiga':3,
+            'empat':4,
+            'lima':5,
+            'enam':6,
+            'tujuh':7,
+            'delapan':8,
+            'sembilan':9,
+            'sepuluh':10,
+            'sebelas':11,
+            'seratus':100
+            }
+    kalimat = kalimat.casefold()
+    kalimat = kalimat.split("" "")
+    hasil=0
+    temp=0
+    temp2=0
+    idx=0
+    for kata in kalimat:
+        if kata in dictangka:
+            temp2+=dictangka[kata]
+        elif(kata == 'puluh'):
+            temp2*=10
+            temp+=temp2
+            temp2=0
+        elif(kata == 'belas'):
+            temp2+=10
+            temp+=temp2
+            temp2=0
+        elif(kata == 'ratus'):
+            temp2*=100
+            temp+=temp2
+            temp2=0
+        elif(kata == 'ribu'):
+            temp+=temp2
+            temp*=1000
+            hasil+=temp
+            temp=0
+            temp2=0
+        elif(kata == 'juta'):
+            temp+=temp2
+            temp*=1000000
+            hasil+=temp
+            temp=0
+            temp2=0
+        elif(kata == 'milyar'):
+            temp+=temp2
+            temp*=1000000000
+            hasil+=temp
+            temp=0
+            temp2=0
+        elif(kata == 'triliun'):
+            temp+=temp2
+            temp*=1000000000000
+            hasil+=temp
+            temp=0
+            temp2=0
+        idx+=1
+        if(idx == len(kalimat)):
+            temp+=temp2
+            hasil+=temp
+            temp=0
+    return hasil
+
+#--------------- dari kalimat ke angka, tetapi tidak bisa angka float
+kalimat = 'Dua juta lima ratus tiga puluh ribu seratus sepuluh'
+print(kata2angka(kalimat))
+
+#--------------- dari angka ke kalimat
+angka = '5.217.123,141542'
+print(angka2kata(angka))
+"
+9021281722064,"# -- coding: utf-8 --
+""""""
+Created on Tue Feb  4 17:07:33 2020
+
+@author: HP
+""""""
+""""""
+def konversiAK(x):
+    satuan = [' ', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh', 'delapan', 'sembilan', 'sepuluh', 'sebelas']
+    hasil = "" ""
+    if x < 12 :
+        hasil += satuan[x]
+    elif x < 20 :
+        hasil += konversi(x-10) + "" belas""
+    elif x < 20 :
+        hasil += konversi(x-10) + "" belas""
+    elif x < 100:
+        hasil += konversi(int(x/10)) + "" puluh"" + konversi(x%10)
+    elif x < 200 :
+        hasil += ""seratus"" + konversi(x-100)
+    elif x < 1000 :
+        hasil += konversi(int(x/100)) + "" ratus"" + konversi(x%100)
+    elif x < 2000 :
+        hasil += ""seribu"" + konversi(x-1000)
+    elif x < 1000000 :
+        hasil += konversi(int(x/1000)) + "" ribu"" + konversi(x%1000)
+    elif x < 1000000000 :
+        hasil += konversi(int(x/1000000)) + "" juta"" + konversi(x%1000000)
+    elif x >= 1000000000 :
+        hasil += konversi(int(x/1000000000)) + "" milyar"" + konversi(x%1000000000)
+
+    return hasil
+
+print(konversi(109))
+""""""
+def konversiKA (textnum, numwords={}):
+    if not numwords:
+        units = [
+        ""kosong"", ""satu"", ""dua"", ""tiga"", ""empat"", ""lima"", ""enam"", ""tujuh"", ""delapan"",
+        ""sembilan"", ""sepuluh"", ""sebelas"", ""duabelas"", ""tigabelas"", ""empatbelas"", ""limabelas"",
+        ""enambelas"", ""tujuhbelas"", ""delapanbelas"", ""sembilanbelas"",
+        ]
+
+        tens = ["""", """", ""duapuluh"", ""tigapuluh"", ""empatpuluh"", ""limapuluh"", ""enampuluh"", ""tujuhpuluh"", ""delapanpuluh"", ""sembilanpuluh""]
+
+        scales = [""ratus"", ""ribu"", ""juta"", ""milyar"", ""triliun""]
+
+        numwords[""and""] = (1, 0)
+        for idx, word in enumerate(units):  numwords[word] = (1, idx)
+        for idx, word in enumerate(tens):       numwords[word] = (1, idx * 10)
+        for idx, word in enumerate(scales): numwords[word] = (10 ** (idx * 3 or 2), 0)
+
+    textnum = textnum.replace('-', ' ')
+
+    temp = hasil = 0
+    curstring = """"
+    onnumber = False
+    for word in textnum.split():        
+        if word not in numwords:
+             if onnumber:
+                curstring += repr(hasil + temp) + "" ""
+             curstring += word + "" ""
+             hasil = temp = 0
+             onnumber = False
+        else:
+             scale, increment = numwords[word]
+
+             temp = temp * scale + increment
+             if scale > 100:
+                 hasil += temp
+                 temp = 0
+             onnumber = True
+
+    if onnumber:
+        curstring += repr(hasil + temp)
+
+    return curstring
+
+
+angka = input('Angka = ')
+kata = konversiKA(angka)
+print(kata)"
+9021181722001,"# -*- coding: utf-8 -*-
+""""""
+Created on Tue Feb  4 20:24:48 2020
+
+@author: DELL
+""""""
+
+""""""
+No 1
+""""""
+satuan = ['', 'satu ', 'dua ', 'tiga ', 'empat ', 'lima ',
+          'enam ', 'tujuh ', 'delapan ', 'sembilan ', 'sepuluh ', 'sebelas ', 
+          'dua belas ', 'tiga belas ', 'empat belas ', 'lima belas ', 
+          'enam belas ', 'tujuh belas ', 'delapan belas ', 'sembilan belas ']
+
+def tulis(angka, kelipatan):
+    terbilang = satuan[angka] + kelipatan
+    return terbilang
+
+
+def ratus_puluh_satuan(angka):
+    ratus = angka // 100
+    sisa_ratus = angka % 100
+    puluh = sisa_ratus // 10
+    satuan = angka % 10
+    terbilang = ''
+
+    if(ratus == 1):
+        terbilang += tulis(0, ""seratus "")
+    elif(ratus != 1 and ratus >= 1):
+        terbilang += tulis(ratus, ""ratus "")
+    if (sisa_ratus >= 20):
+        terbilang += tulis(puluh, ""puluh "")
+        terbilang += tulis(satuan, """")
+    elif(sisa_ratus < 20):
+        terbilang += tulis(sisa_ratus, """")
+
+    return terbilang
+
+
+def konversi(angka):
+    milyar = angka // 1000000000
+    sisa_milyar = angka % 1000000000
+    juta = sisa_milyar // 1000000
+    sisa_juta = sisa_milyar % 1000000
+    ribu = sisa_juta // 1000
+    sisa_ribu = sisa_juta % 1000
+    terbilang = ''
+
+    if(milyar >= 1):
+        terbilang += ratus_puluh_satuan(milyar)
+        terbilang += ""milyar ""
+    if(juta >= 1):
+        terbilang += ratus_puluh_satuan(juta)
+        terbilang += ""juta ""
+    if(ribu > 1):
+        terbilang += ratus_puluh_satuan(ribu)
+        terbilang += ""ribu ""
+    elif(ribu == 1):
+        terbilang += ""seribu ""
+    terbilang += ratus_puluh_satuan(sisa_ribu)
+
+    return terbilang
+
+angka = input(""Input : "")
+data=angka.lower()
+dict_decimal={
+       ""0"":"""",
+       ""1"":""satu"",
+       ""2"":""dua"",
+       ""3"":""tiga"",
+       ""4"":""empat"",
+       ""5"":""lima"",
+       ""6"":""enam"",
+       ""7"":""tujuh"",
+       ""8"":""delapan"",
+       ""9"":""sembilan""
+        }
+
+terbilang=""""
+if(""rp."" in data):
+  data=data.replace(""rp"","""")
+  data=data.replace(""."","""")
+  terbilang=konversi(int(data))
+  terbilang+=""rupiah""
+  print(terbilang)
+  
+if(""%"" in data):
+   terbilang=[]
+   data= data.replace(""%"","""")
+   liss= data.split("","")
+   if int(liss[0]== 0):
+      terbilang.append(""nol"")
+   else :
+      terbilang.append(konversi(int(liss[0])))
+       
+   temp=""""
+   for item in liss[1]:
+       temp+=dict_decimal[item]
+   terbilang.append(temp)
+output = str(terbilang[0])+""koma ""+str(terbilang[1])+"" persen ""
+print(output)
+  
+  
+# -*- coding: utf-8 -*-
+""""""
+Created on Tue Feb  4 20:06:53 2020
+
+@author: DELL
+""""""
+""""""
+No 2
+""""""
+Dict_Number={
+        ""satu""     :1,
+        ""dua""      :2,
+        ""tiga""     :3,
+        ""empat""    :4,
+        ""lima""     :5,
+        ""enam""     :6,
+        ""tujuh""    :7,
+        ""delapan""  :8,
+        ""sembilan"" :9,
+        ""sepuluh""  :10,
+        ""sebelas""  :11,
+        ""belas""    :10,
+        ""puluh""    :10,
+        ""seratus""  :100,
+        ""seribu""   :1000,
+        ""ratus""    :100,
+        ""ribu""     :1000,
+        ""juta""     :1000000,
+        ""milyar""   :1000000000,
+        ""triliun""  :1000000000000
+        }
+
+marker=[""puluh"",""ratus"",""ribu"",""juta"",]
+Number_tertentu=[""seratus"",""seribu"",""sebelas"",""sejuta""]
+def konversi(angka):
+        data= angka.split()
+        print(data)
+        total =[]
+        tambah = 0
+        cek_marker = False
+        for index,item in enumerate(data):
+          penanda = Dict_Number[item]
+          if item in marker:
+            if cek_marker == True:
+               total[len(total)-1]*=penanda
+            else:
+               tambah*=penanda
+               total.append(tambah)
+               tambah=0
+               cek_marker = True
+               continue
+          elif item in Number_tertentu:
+               total.append(penanda)
+               cek_marker = True
+               continue
+          else:
+               tambah+=penanda
+               cek_marker = False
+          if index == len(data)-1 :
+               total.append(tambah)
+        for index in range(len(total)-1,0,-1):
+          selisih = len(str(total[index])) - len(str(total[index-1]))
+          if selisih > 0:
+            total[index-1] = total[index-1]*(10**(selisih+1))
+        output = 0
+        for item in total:
+           output+=item
+        return output
+    
+def tambahtitik(output):
+    count=0
+    data=str(output)
+    hasil=""""
+    for i in range(len(data)-1,-1,-1):
+        count+=1
+        if(count==4):
+            hasil=data[i]+"".""+hasil
+            count=1
+        else:
+           hasil=data[i]+hasil
+    return hasil;
+
+ 
+angka = input(""Input_terbilang : "")
+if ""rupiah"" in angka:
+  angka=angka.replace(""rupiah"","""")
+  angka=konversi(angka)
+  format_angka=tambahtitik(angka)
+  print(""Rp.""+format_angka)
+else:
+    if ""persen"" in angka :
+        angka=angka.replace(""persen"","""")
+    if ""koma"" in angka:
+        hasil=[]
+        data=angka.split(""koma"")
+        if (data[0].replace("" "","""")==""nol""):
+            hasil.append(""0"")
+        else:
+            hasil.append(str(konversi(data[0])))
+        data[1] = data[1].split()
+        terbilang=""""
+        for item in data[1]:
+            terbilang=terbilang+str(Dict_Number[item])
+            hasil.append(terbilang)
+        print(hasil[0]+"",""+hasil[1]+""%"")"
+9021181722003,"# Angka ke kata
+data = ["""", ""satu"", ""dua"", ""tiga"", ""empat"", ""lima"", ""enam"", ""tujuh"", ""delapan"", ""sembilan""]
+
+def numToWord(var, ret):
+    
+    length_number = len(str(abs(var)))
+    if (length_number <= 1 and var == -1):
+        return ret
+    else:
+        if (length_number >= 10):
+            sisa = var % 1000000000
+            var //= 1000000000
+            
+            if (var > 9):
+                setN = numToWord(var, """")
+            else:
+                setN = data[var]
+                
+            return numToWord(sisa, ret+setN + ""milyar "")
+        
+        elif (length_number >= 7):
+            sisa = var % 1000000
+            var //= 1000000
+            
+            
+            if (var > 9):
+                setN = numToWord(var, """")
+            else:
+                setN = data[var]
+            
+            return numToWord(sisa, ret+setN + ""juta "")
+        
+        
+        elif (length_number >= 4):
+            sisa = var % 1000
+            var //= 1000
+
+            if (var > 9):
+                setN = numToWord(var, """")
+            else:
+                setN = data[var]
+                
+            if (var == 1):
+                setN = ""se""
+                return numToWord(sisa, ret+setN + ""ribu "")
+            else:
+                return numToWord(sisa, ret+setN + ""ribu "")
+            
+            
+            
+        elif (length_number >=3):
+            sisa = var % 100
+            var //= 100
+            if (var > 9):
+                setN = numToWord(var, """")
+            else:
+                setN = data[var]
+            if (var == 1):
+                setN = ""se""
+                return numToWord(sisa, ret+setN + ""ratus "")
+            else:
+                return numToWord(sisa, ret+setN + "" ratus "")
+            
+            
+            
+        elif (length_number >= 2):
+            if (var >= 11 and var <= 19):
+                label = ""belas""
+                var %= 10
+                if (var ==1):
+                    setN = ""se""
+                else:
+                    setN = data[var]+"" ""
+                final = setN + label
+                return numToWord(0, ret+final)
+                
+            else:
+                label = ""puluh ""
+                sisa = var % 10
+                var //= 10
+                
+                if (var == 1):
+                    setN = ""se""
+                else:
+                    setN = data[var]+"" ""
+                final = setN + label
+                return numToWord(sisa, ret+final)
+                    
+        elif (length_number >=1):
+            
+            setN = data[var]+"" ""
+            
+            var = -1
+            return numToWord(var, ret+setN)
+        else:
+            return """"
+ 
+    
+    
+### Main Start Here
+var = numToWord(123456789,"""")
+print(var)"
+9021181722023,"Nomor 1. Number to words
+# -*- coding: utf-8 -*-
+""""""
+Created on Tue Feb  4 23:45:36 2020
+
+@author: Zaneva
+""""""
+
+satuan = ['', 'satu ', 'dua ', 'tiga ', 'empat ', 'lima ',
+          'enam ', 'tujuh ', 'delapan ', 'sembilan ', 'sepuluh ', 
+          'sebelas ', 'dua belas ', 'tiga belas ', 'empat belas ', 
+          'lima belas ', 'enam belas ', 'tujuh belas ', 'delapan belas ', 
+          'sembilan belas ']
+
+
+def tulis(angka, kelipatan):
+    bilangan = satuan[angka] + kelipatan
+    return bilangan
+
+
+def ratus_puluh_satuan(angka):
+    ratus = angka // 100
+    sisa_ratus = angka % 100
+    puluh = sisa_ratus // 10
+    satuan = angka % 10
+    bilangan = ''
+
+    if(ratus == 1):
+        bilangan += tulis(0, ""seratus "")
+    elif(ratus != 1 and ratus >= 1):
+        bilangan += tulis(ratus, ""ratus "")
+    if (sisa_ratus >= 20):
+        bilangan += tulis(puluh, ""puluh "")
+        bilangan += tulis(satuan, """")
+    elif(sisa_ratus < 20):
+        bilangan += tulis(sisa_ratus, """")
+
+    return bilangan
+
+
+def milyar_juta_ribu(angka):
+    milyar = angka // 1000000000
+    sisa_milyar = angka % 1000000000
+    juta = sisa_milyar // 1000000
+    sisa_juta = sisa_milyar % 1000000
+    ribu = sisa_juta // 1000
+    sisa_ribu = sisa_juta % 1000
+    bilangan = ''
+
+    if(milyar >= 1):
+        bilangan += ratus_puluh_satuan(milyar)
+        bilangan += ""milyar ""
+    if(juta >= 1):
+        bilangan += ratus_puluh_satuan(juta)
+        bilangan += ""juta ""
+    if(ribu > 1):
+        bilangan += ratus_puluh_satuan(ribu)
+        bilangan += ""ribu ""
+    elif(ribu == 1):
+        bilangan += ""seribu ""
+    bilangan += ratus_puluh_satuan(sisa_ribu)
+
+    return bilangan
+
+angka = int(input(""Masukan Angka :""))
+bilangan = milyar_juta_ribu(angka)
+print(bilangan)
+
+Nomor 2. Words to number
+# -*- coding: utf-8 -*-
+""""""
+Created on Wed Feb  5 01:29:14 2020
+
+@author: Zaneva
+""""""
+print(""---Words to Number---"")
+
+numbers = {""zero"":0, ""one"":1, ""two"":2, ""three"":3, ""four"":4, ""five"":5, ""six"":6, ""seven"":7,
+ ""eight"":8, ""nine"":9, ""ten"":10, ""eleven"":11, ""twelve"":12, ""thirteen"":13, ""fourteen"":14,
+ ""fifteen"":15, ""sixteen"":16, ""seventeen"":17, ""eighteen"":18,"" nineteen"":19, ""twenty"":20,
+ ""thirty"":30, ""forty"":40, ""fifty"":50, ""sixty"":60, ""seventy"":70, ""eighty"":80, ""ninety"":90,
+ ""hundred"":100, ""thousand"":1000, ""million"":1000000, ""billion"":1000000000, ""point"":111,
+ ""trillion"":1000000000000}
+
+lis = []
+def wordsnum(x):
+   num = 0
+   num1 = """"
+   point = 0
+   for i in x:
+     if i in numbers:
+           if numbers[i] < 100: 
+              num = num + numbers[i]
+           elif numbers[i] == 100:
+              num = num * numbers[i]
+           elif numbers[i] == 111:
+              lis.append(num)
+              point = 1
+              j = x.index(i)
+              k = x[(j+1)]
+              for o in k:
+                if o in numbers:             
+                  num1 += str(numbers[o])    
+                else:
+                  pass
+           else:
+              num = num * numbers[i]
+              lis.append(num)
+              num = 0
+     else:
+       pass
+   j = 0
+   if point:
+        o = int(num1)
+        p = len(num1)
+        num = o/10**p
+        while j < len(lis):
+          num = num + lis[j]
+          j = j + 1
+   else:
+        while j < len(lis):
+          num = num + lis[j]
+          j = j + 1
+   return(num)
+   
+your_input = (((((input(""Masukan Input Menggunakan Bahasa Inggris: "")).lower()).replace("","","" "")).replace(""-"","" "")).replace(""."","" ""))
+wordsnumber = (your_input).split("" "")
+print(wordsnum(wordsnumber))"
+9021281722037,"print(""NUMBER TO WORD"")
+satuan = ['', 'satu ', 'dua ', 'tiga ', 'empat ', 'lima ',
+          'enam ', 'tujuh ', 'delapan ', 'sembilan ', 'sepuluh ', 'sebelas ', 'dua belas ', 'tiga belas ', 'empat belas ', 'lima belas ', 'enam belas ', 'tujuh belas ', 'delapan belas ', 'sembilan belas ']
+
+
+def tulis(angka, kelipatan):
+    terbilang = satuan[angka] + kelipatan
+    return terbilang
+
+
+def ratus_puluh_satuan(angka):
+    
+    ratus = angka // 100
+    sisa_ratus = angka % 100
+    puluh = sisa_ratus // 10
+    satuan = angka % 10
+    terbilang = ''
+
+    if(ratus == 1):
+        terbilang += tulis(0, ""seratus "")
+    elif(ratus != 1 and ratus >= 1):
+        terbilang += tulis(ratus, ""ratus "")
+    if (sisa_ratus >= 20):
+        terbilang += tulis(puluh, ""puluh "")
+        terbilang += tulis(satuan, """")
+    elif(sisa_ratus < 20):
+        terbilang += tulis(sisa_ratus, """")
+
+    return terbilang
+
+
+def milyar_juta_ribu(angka):
+    milyar = angka // 1000000000
+    sisa_milyar = angka % 1000000000
+    juta = sisa_milyar // 1000000
+    sisa_juta = sisa_milyar % 1000000
+    ribu = sisa_juta // 1000
+    sisa_ribu = sisa_juta % 1000
+    terbilang = ''
+
+    if(milyar >= 1):
+        terbilang += ratus_puluh_satuan(milyar)
+        terbilang += ""milyar ""
+    if(juta >= 1):
+        terbilang += ratus_puluh_satuan(juta)
+        terbilang += ""juta ""
+    if(ribu > 1):
+        terbilang += ratus_puluh_satuan(ribu)
+        terbilang += ""ribu ""
+    elif(ribu == 1):
+        terbilang += ""seribu ""
+    terbilang += ratus_puluh_satuan(sisa_ribu)
+    
+    return terbilang
+
+angka = input(""input"")
+
+angka = int(input(""Maskukan Angka :""))
+
+
+    
+terbilang = milyar_juta_ribu(angka)
+print(terbilang)
+
+
+print(""WORD TO NUMBER"")
+
+numbers = {""zero"":0, ""one"":1, ""two"":2, ""three"":3, ""four"":4, ""five"":5, ""six"":6, ""seven"":7,
+ ""eight"":8, ""nine"":9, ""ten"":10, ""eleven"":11, ""twelve"":12, ""thirteen"":13, ""fourteen"":14,
+ ""fifteen"":15, ""sixteen"":16, ""seventeen"":17, ""eighteen"":18,"" nineteen"":19, ""twenty"":20,
+ ""thirty"":30, ""forty"":40, ""fifty"":50, ""sixty"":60, ""seventy"":70, ""eighty"":80, ""ninety"":90,
+ ""hundred"":100, ""thousand"":1000, ""million"":1000000, ""billion"":1000000000, ""point"":111,
+ ""trillion"":1000000000000}
+
+lis = []
+def word2num(x):
+   num = 0
+   num1 = """"
+   point = 0
+   for i in x:
+     if i in numbers:
+           if numbers[i] < 100: 
+              num = num + numbers[i]
+           elif numbers[i] == 100:
+              num = num * numbers[i]
+           elif numbers[i] == 111:
+              lis.append(num)
+              point = 1
+              j = x.index(i)
+              k = x[(j+1)]
+              for o in k:
+                if o in numbers:             
+                  num1 += str(numbers[o])    
+                else:
+                  pass
+           else:
+              num = num * numbers[i]
+              lis.append(num)
+              num = 0
+     else:
+       pass
+   j = 0
+   if point:
+        o = int(num1)
+        p = len(num1)
+        num = o/10**p
+        while j < len(lis):
+          num = num + lis[j]
+          j = j + 1
+   else:
+        while j < len(lis):
+          num = num + lis[j]
+          j = j + 1
+   return(num)
+   
+your_input = (((((input(""input angka dalam bahasa inggris: "")).lower()).replace("","","" "")).replace(""-"","" "")).replace(""."","" ""))
+word2number = (your_input).split("" "")
+print(word2num(word2number))"
+9021281722063,"# M Imam Pratama
+# 09021281722063
+
+# Program ini menggunakan python 3
+
+# MEMBUAT FUNGSI NORMALITAS DARI ANGKA KE KATA
+
+
+def string_angka(angka):
+    '''
+    return string kata dari suatu digit angka
+    '''
+
+    # https://stackoverflow.com/a/60211/9157799
+    return {
+        1: 'satu',
+        2: 'dua',
+        3: 'tiga',
+        4: 'empat',
+        5: 'lima',
+        6: 'enam',
+        7: 'tujuh',
+        8: 'delapan',
+        9: 'sembilan'
+    }[angka]
+
+
+def angka_3_digit_ke_kata(str_angka):
+    '''
+    menerima string angka 3 digit, mereturn list kata
+    '''
+
+    angka = float(str_angka)
+    ratusan = angka // 100
+    angka %= 100
+    puluhan = angka // 10
+    angka %= 10
+    satuan = angka
+    list_kata = []
+    if ratusan > 0:
+        list_kata.append(string_angka(ratusan))
+        list_kata.append('ratus')
+    if puluhan > 0:
+        list_kata.append(string_angka(puluhan))
+        list_kata.append('puluh')
+    if satuan > 0:
+        list_kata.append(string_angka(satuan))
+    return list_kata
+
+
+def angka_di_belakang_koma_ke_kata(str_angka):
+    list_kata = []
+    for angka in str_angka:
+        list_kata.append(string_angka(int(angka)))
+    return list_kata
+
+
+def nilai_level(level):
+    return {
+        2: 'ribu',
+        3: 'juta',
+        4: 'milyar',
+        5: 'triliun'
+    }[level]
+
+
+def angka_ke_kata(string_angka):
+    '''
+    warning: maximum level triliunan
+    '''
+
+    list_kata = []
+    angka_di_depan_koma = string_angka.split(',')[0]
+    kumpulan_angka_3_digit = angka_di_depan_koma.split('.')
+    level = len(kumpulan_angka_3_digit)
+    while level > 0:
+        kata = angka_3_digit_ke_kata(kumpulan_angka_3_digit.pop(0))
+        if (len(kata) > 0):
+            list_kata.extend(kata)
+            if level > 1:
+                list_kata.append(nilai_level(level))
+        level -= 1
+
+    # cek apakah ada koma
+    if ',' in string_angka:
+        angka_di_belakang_koma = string_angka.split(',')[1]
+        list_kata.append('koma')
+        list_kata.extend(
+            angka_di_belakang_koma_ke_kata(angka_di_belakang_koma)
+        )
+    return list_kata
+
+
+def normalisasi_angka_ke_kata(angka):
+    karakter_pertama = angka[0]
+    karakter_terakhir = angka[-1]
+
+    # cek jika duit
+    if karakter_pertama == 'R':
+        list_kata = angka_ke_kata(angka.split()[1])
+        list_kata.append('rupiah')
+    elif karakter_terakhir == '%':  # jika persen
+        list_kata = angka_ke_kata(angka[:-1])
+        list_kata.append('persen')
+    else:
+        list_kata = angka_ke_kata(angka)
+
+    return ' '.join(list_kata)
+
+
+# TES INPUT DI SINI
+
+samples = [
+    'Rp. 200.000',
+    '95,74%',
+    '1.000.500'
+]
+
+for sample in samples:
+    print(normalisasi_angka_ke_kata(sample))
+
+
+###############################################
+
+# MEMBUAT FUNGSI NORMALITAS DARI KATA KE ANGKA
+
+def kata_ke_angka(kata):
+    return {
+        'nol': 0,
+        'satu': 1,
+        'dua': 2,
+        'tiga': 3,
+        'empat': 4,
+        'lima': 5,
+        'enam': 6,
+        'tujuh': 7,
+        'delapan': 8,
+        'sembilan': 9
+    }[kata]
+
+besaran = [
+    'triliun',
+    'milyar',
+    'juta',
+    'ribu'
+]
+
+def pengali_dari_besaran(kata):
+    return {
+        'ribu': 1000,
+        'juta': 1000000,
+        'milyar': 1000000000,
+        'triliun': 1000000000000,
+    }[kata]
+
+def olah_depan(kalimat):
+    list_kata = kalimat.split()
+    list_kata.reverse()
+    nilai = 0
+    pengali = 1
+    pengali_besaran = 1
+    for kata in list_kata:
+        if kata not in besaran:
+            if kata == 'puluh':
+                pengali = pengali_besaran * 10
+            elif kata == 'ratus':
+                pengali = pengali_besaran * 100
+            else:
+                nilai += kata_ke_angka(kata) * pengali
+        else:
+            pengali_besaran = pengali_dari_besaran(kata)
+            pengali = pengali_besaran
+    str_nilai = str(nilai)
+    # https://stackoverflow.com/q/931092/9157799
+    str_nilai = str_nilai[::-1]
+    str_nilai_pake_titik = ''
+    i = 0
+    for digit in str_nilai:
+        if i > 0 and i % 3 == 0:
+            str_nilai_pake_titik = '.' + str_nilai_pake_titik
+        str_nilai_pake_titik = digit + str_nilai_pake_titik
+        i += 1
+    return str_nilai_pake_titik
+
+def olah_belakang(kalimat):
+    list_kata = kalimat.split()
+    str_angka = ''
+    for kata in list_kata:
+        str_angka += str(kata_ke_angka(kata))
+    return str_angka
+
+
+def olah_depan_belakang(depan_belakang):
+    depan = olah_depan(depan_belakang[0])
+    belakang = olah_belakang(depan_belakang[1])
+    return depan + ',' + belakang
+
+
+def normalisasi_kata_ke_angka(kata):
+    '''
+    NOTE:
+    - untuk puluhan JANGAN LUPA PAKAI KATA 'PULUH' untuk angka di depan koma.
+    - untuk angka di belakang koma,
+      tidak usah pakai 'puluh', 'ratus' dan sebagainya.
+    '''
+    rupiah = False
+    persen = False
+    kata_terakhir = kata.split()[-1]
+    if kata_terakhir == 'rupiah':
+        rupiah = True
+        # https://stackoverflow.com/a/6266839/9157799
+        kata = kata.rsplit(' ', 1)[0]
+    elif kata_terakhir == 'persen':
+        persen = True
+        kata = kata.rsplit(' ', 1)[0]
+
+    if 'koma' in kata:
+        depan_belakang = kata.split(' koma ')
+        hasil_akhir = olah_depan_belakang(depan_belakang)
+    else:
+        hasil_akhir = olah_depan(kata)
+
+    if rupiah:
+        return 'Rp. ' + hasil_akhir
+    if persen:
+        return hasil_akhir + '%'
+    return hasil_akhir
+
+
+# TES INPUT DI SINI
+
+'''
+NOTE:
+- untuk puluhan JANGAN LUPA PAKAI KATA 'PULUH' untuk angka di depan koma.
+- untuk angka di belakang koma,
+  tidak usah pakai 'puluh', 'ratus' dan sebagainya.
+- cara penyebutan yang benar bisa dicoba menggunakan text to speech google
+  translate.
+'''
+
+samples = [
+    'dua ratus ribu rupiah',
+    'sembilan puluh lima koma tujuh empat persen',
+    'satu juta lima ratus'
+]
+
+for sample in samples:
+    print(normalisasi_kata_ke_angka(sample))"
+9021181722012,"# -*- coding: utf-8 -*-
+""""""
+Created on Tue Feb  4 12:51:25 2020
+
+@author: Farhan
+""""""
+from nltk.tokenize import word_tokenize 
+def num2word(num):
+    word_last = """"
+    if num[:4] == (""Rp. "") :
+        word_last = ""rupiah""
+        num = num[4:]
+    if num[-1] == (""%"") :
+        word_last = ""persen""
+        num = num[:-1]
+    num_koma=""""
+    word_koma=""""
+    for i in range(len(num)):
+        if num[i] == "","":
+            num_koma=num[i+1:]
+            num = num[:i]
+            word_koma=""koma ""+num2word(num_koma)
+            break
+    num= num.split('.')
+    word = """"
+    i=0
+    for i in range(len(num)):
+        a = num[i]
+        triple0=False
+        for j in range(len(a)):
+            if(len(a)>1):
+                if (j==0) and (int(a[j])==1) and len(a)==3: #seratus
+                    word = word + ""se"" + puluhan[3]
+                if (j<=1) and (int(a[j])==1) and (int(a[j+1])>1) : #belasan
+                    word = word + satuan[int(a[j+1])] + puluhan[0]
+                    break
+                elif (j<=1) and (int(a[j])==1) and (int(a[j+1])==1) : #sebelas
+                    word = word + ""se"" + puluhan[0]
+                    break
+                elif (j<=1) and (int(a[j])==1) and (int(a[j+1])==0) : #sepuluh
+                    word = word + ""se"" + puluhan[2]
+                    break
+                elif (int(a[j])!=0) :
+                    word = word + satuan[int(a[j])] + puluhan[len(a)-j]
+                elif (a == ""000""):
+                    triple0=True
+                    break
+            else:
+                word = word + satuan[int(a[j])] + puluhan[len(a)-j]
+                
+        if (i!=len(num)-1) and triple0==False:
+            word = word + puluhan[len(num)+2-i]         
+            
+    return word+word_koma+word_last
+
+def word2num(word):
+    word = word_tokenize(word) 
+    num=""""
+    for i in range (len(word)):
+        a=word[i]+"" ""
+        if a in satuan:
+            if num[-2:-1] == ""0"" and (i+1==len(word)):
+                    num = str(num[:-1]) + str(int(satuan.index(a)))
+            else:
+                num = str(num) + str(int(satuan.index(a)))
+        else :
+            
+            if(a[:2]==""se""):
+                a=a[2:]
+                num = str(num) + ""1""
+            if(a==""belas ""): 
+                num = str(num[:-3]) + ""1"" + str(num[-1])
+            elif(a==""puluh "") and (i+1==len(word)) :
+                num = str(num[:-3]) + str(int(num[-1]))  + ""0"" 
+            elif(a==""puluh ""): 
+                if(num[-4:-1]) == ""000"":
+                    num = str(num[:-4]) + str(int(num[-1])) 
+                elif(num[-3:-1]) == ""00"":
+                    num = str(num[:-3]) + str(int(num[-1])) 
+                elif(num[-2:-1]) == ""0"":
+                    num = str(num[:-2]) + str(int(num[-1]))
+                if word[i+1]==""ribu"" or word[i+1]==""juta"":
+                    num = str(num) + ""0""
+            elif(a==""ratus ""):
+                if num[-8:-1] == ""000.000"":
+                    num = str(num[:-4]) + str(int(num[-1])) +""00""
+                elif num[-4:-1] == ""000"" :
+                    num = str(num[:-4]) + str(int(num[-1])) +""00""
+                else:
+                    num = str(num) + ""00""
+            elif(a==""ribu ""):
+                if(num[-3:-1]) == ""00"":
+                    num = str(num[:-2]) + str(int(num[-1]))
+                if num[-8:-4] == "".000"": #ratus
+                    num = str(num[:-7]) + str(int(num[-3:])) + "".000""
+                elif num[-7:-3] == "".000"": #puluh
+                    num = str(num[:-6]) + ""0"" + str(int(num[-2:])) + "".000""
+                elif num[-9:-5] == "".000"": #satu
+                    num = str(num[:-8]) + ""00"" + str(int(num[-4:])) + "".000""
+                else:
+                    num = str(num) + "".000""
+            elif(a==""juta ""): 
+                num = str(num) + "".000.000""
+            elif(a==""persen ""): 
+                num = str(num) + ""%""
+            elif(a==""rupiah ""): 
+                num = ""Rp. "" + str(num) 
+            elif(a==""koma ""): 
+                num = str(num) + "",""
+          
+    return num
+            
+num1 = ""Rp. 200.000""
+num2 = ""95,74%""
+num3 = ""1.000.500""
+num4 = ""15.021.302""
+word1 = ""dua ratus ribu rupiah""
+word2 = ""sembilan puluh lima koma tujuh puluh empat persen""
+word3 = ""satu juta lima ratus""
+word4 = ""seratus sebelas juta tiga ratus lima puluh sembilan ribu dua ratus tiga""
+
+satuan = [""nol "",""satu "",""dua "",""tiga "",""empat "",""lima "",""enam "",""tujuh "",""delapan "",""sembilan ""]
+puluhan =[""belas "","""",""puluh "",""ratus "",""ribu "",""juta ""]
+
+print(num1+"" = ""+num2word(num1))
+print(num2+"" = ""+num2word(num2))
+print(num3+"" = ""+num2word(num3))
+print(num4+"" = ""+num2word(num4))
+
+print(word1+"" = ""+word2num(word1))
+print(word2+"" = ""+word2num(word2))
+print(word3+"" = ""+word2num(word3))
+print(word4+"" = ""+word2num(word4))
+
+
+"
+9021181722074,"# -*- coding: utf-8 -*-
+""""""
+Created on Mon Feb  3 00:41:43 2020
+
+@author: Adinda
+""""""
+satuan = ['', 'satu ', 'dua ', 'tiga ', 'empat ', 'lima ',
+          'enam ', 'tujuh ', 'delapan ', 'sembilan ', 'sepuluh ', 'sebelas ', 'dua belas ', 'tiga belas ', 'empat belas ', 'lima belas ', 'enam belas ', 'tujuh belas ', 'delapan belas ', 'sembilan belas ']
+
+
+def tulis(angka, kelipatan):
+    terbilang = satuan[angka] + kelipatan
+    return terbilang
+
+
+def ratus_puluh_satuan(angka):
+    ratus = angka // 100
+    sisa_ratus = angka % 100
+    puluh = sisa_ratus // 10
+    satuan = angka % 10
+    terbilang = ''
+
+    if(ratus == 1):
+        terbilang += tulis(0, ""seratus "")
+    elif(ratus != 1 and ratus >= 1):
+        terbilang += tulis(ratus, ""ratus "")
+    if (sisa_ratus >= 20):
+        terbilang += tulis(puluh, ""puluh "")
+        terbilang += tulis(satuan, """")
+    elif(sisa_ratus < 20):
+        terbilang += tulis(sisa_ratus, """")
+
+    return terbilang
+
+
+def milyar_juta_ribu(angka):
+    milyar = angka // 1000000000
+    sisa_milyar = angka % 1000000000
+    juta = sisa_milyar // 1000000
+    sisa_juta = sisa_milyar % 1000000
+    ribu = sisa_juta // 1000
+    sisa_ribu = sisa_juta % 1000
+    terbilang = ''
+
+    if(milyar >= 1):
+        terbilang += ratus_puluh_satuan(milyar)
+        terbilang += ""milyar ""
+    if(juta >= 1):
+        terbilang += ratus_puluh_satuan(juta)
+        terbilang += ""juta ""
+    if(ribu > 1):
+        terbilang += ratus_puluh_satuan(ribu)
+        terbilang += ""ribu ""
+    elif(ribu == 1):
+        terbilang += ""seribu ""
+    terbilang += ratus_puluh_satuan(sisa_ribu)
+
+    return terbilang
+
+
+angka = int(input(""Masukkan Angka :""))
+terbilang = milyar_juta_ribu(angka)
+print(terbilang)"
+9021281722040,"# -*- coding: utf-8 -*-*
+""""""
+Created on Tue Feb  4 21:38:31 2020
+
+@author: Nabil
+""""""
+
+satuan = ['', 'satu ', 'dua ', 'tiga ', 'empat ', 'lima ',
+          'enam ', 'tujuh ', 'delapan ', 'sembilan ', 'sepuluh ', 'sebelas ', 'dua belas ', 'tiga belas ', 'empat belas ', 'lima belas ', 'enam belas ', 'tujuh belas ', 'delapan belas ', 'sembilan belas ']
+
+
+def tulis(angka, kelipatan):
+    terbilang = satuan[angka] + kelipatan
+    return terbilang
+
+
+def ratus_puluh_satuan(angka):
+    ratus = angka // 100
+    sisa_ratus = angka % 100
+    puluh = sisa_ratus // 10
+    satuan = angka % 10
+    terbilang = ''
+
+    if(ratus == 1):
+        terbilang += tulis(0, ""seratus "")
+    elif(ratus != 1 and ratus >= 1):
+        terbilang += tulis(ratus, ""ratus "")
+    if (sisa_ratus >= 20):
+        terbilang += tulis(puluh, ""puluh "")
+        terbilang += tulis(satuan, """")
+    elif(sisa_ratus < 20):
+        terbilang += tulis(sisa_ratus, """")
+
+    return terbilang
+
+
+def milyar_juta_ribu(angka):
+    milyar = angka // 1000000000
+    sisa_milyar = angka % 1000000000
+    juta = sisa_milyar // 1000000
+    sisa_juta = sisa_milyar % 1000000
+    ribu = sisa_juta // 1000
+    sisa_ribu = sisa_juta % 1000
+    terbilang = ''
+
+    if(milyar >= 1):
+        terbilang += ratus_puluh_satuan(milyar)
+        terbilang += ""milyar ""
+    if(juta >= 1):
+        terbilang += ratus_puluh_satuan(juta)
+        terbilang += ""juta ""
+    if(ribu > 1):
+        terbilang += ratus_puluh_satuan(ribu)
+        terbilang += ""ribu ""
+    elif(ribu == 1):
+        terbilang += ""seribu ""
+    terbilang += ratus_puluh_satuan(sisa_ribu)
+
+    return terbilang
+
+
+angka = input(""Masukan  :"")
+
+for j in range(len(angka)):
+    if angka[len(angka)-1] == '%':
+        cariKoma = angka.find(',')
+        if cariKoma >= 0 and cariKoma < len(angka):
+            if '0' in angka:
+                sv = angka.index('')
+                sb = angka[0:sv]
+                st = angka[sv+1:len(angka)]
+                sh = st.replace('%','')
+                terbilang1 = milyar_juta_ribu(int(sb))
+                terbilang2 = milyar_juta_ribu(int(sh))
+                if '0' in sb and '0' in st :
+                    if angka[sv-1] =='0' and angka[sv+1] == '0':
+                        str1 = terbilang1
+                        str1 += 'koma'
+                        str1 += 'nol'
+                        str2 = terbilang2
+                        str2 += 'persen'
+                        print('Output :',str1,str2)
+                    else:
+                        str1 = terbilang1
+                        str1 += 'koma'
+                        str1 += 'nol'
+                        str2 = terbilang2
+                        str2 += 'persen'
+                        print('Output :',str1,str2)
+                        
+                elif '0' in sb :
+                    if angka[sv-1] =='0':
+                        str1 = terbilang1
+                        str1 += 'koma'
+                        str1 += 'nol'
+                        str2 = terbilang2
+                        str2 += 'persen'
+                        print('Output :',str1,str2)
+                else:
+                    if angka[sv+1] =='0':
+                        str1 = terbilang1
+                        str1 += 'koma'
+                        str1 += 'nol'
+                        str2 = terbilang2
+                        str2 += 'persen'
+                        print('Output :', str1,str2)
+                    else :
+                        str1 = terbilang1
+                        str1 += 'koma'
+                        str1 += 'nol'
+                        str2 = terbilang2
+                        str2 += 'persen'
+                        print('Output :',str1,str2)
+            else :
+                sv = angka.index(',')
+                sb = angka[0:sv]
+                st = angka[sv+1:len(angka)]
+                sh = st.replace('%','')
+                terbilang1 = milyar_juta_ribu(int(sb))
+                terbilang2 = milyar_juta_ribu(int(sh))
+                str1 = terbilang1
+                str1 += 'koma'
+                str2 = terbilang2
+                str2 += 'persen'
+                print('Output :', str1,str2)
+        else:
+            sh =angka.replace('%','')
+            terbilang3= milyar_juta_ribu(int(sh))
+            str3 = terbilang3
+            str3 += 'persen'
+            print('Output :'+str3)
+            break;
+        
+    elif(angka[0] == 'R'):
+        for char in angka:
+            rp = angka.replace('Rp.','')
+            terbilang = milyar_juta_ribu(int(rp))
+            terbilang = terbilang + 'rupiah'
+            hasil = terbilang
+            print('Output :',terbilang)
+            break
+            
+    else :
+        for char in angka:
+            terbilang = milyar_juta_ribu(int(angka))
+            print('Output :',terbilang)
+            break"
+9021281722050,"satuan = ['', 'satu ', 'dua ', 'tiga ', 'empat ', 'lima ','enam ', 'tujuh ', 'delapan ', 'sembilan ', 'sepuluh ', 'sebelas ', 'dua belas ', 'tiga belas ', 'empat belas ', 'lima belas ', 'enam belas ', 'tujuh belas ', 'delapan belas ', 'sembilan belas ']
+
+def tulis(angka, kelipatan):
+    terbilang = satuan[angka] + kelipatan
+    return terbilang
+
+
+def ratus_puluh_satuan(angka):
+    ratus = angka // 100
+    sisa_ratus = angka % 100
+    puluh = sisa_ratus // 10
+    satuan = angka % 10
+    terbilang = ''
+
+    if(ratus == 1):
+        terbilang += tulis(0, ""seratus "")
+    elif(ratus != 1 and ratus >= 1):
+        terbilang += tulis(ratus, ""ratus "")
+    if (sisa_ratus >= 20):
+        terbilang += tulis(puluh, ""puluh "")
+        terbilang += tulis(satuan, """")
+    elif(sisa_ratus < 20):
+        terbilang += tulis(sisa_ratus, """")
+
+    return terbilang
+
+
+def miliar_juta_ribu(angka):
+    miliar = angka // 1000000000
+    sisa_miliar = angka % 1000000000
+    juta = sisa_miliar // 1000000
+    sisa_juta = sisa_miliar % 1000000
+    ribu = sisa_juta // 1000
+    sisa_ribu = sisa_juta % 1000
+    terbilang = ''
+
+    if(miliar >= 1):
+        terbilang += ratus_puluh_satuan(miliar)
+        terbilang += ""milyar ""
+    if(juta >= 1):
+        terbilang += ratus_puluh_satuan(juta)
+        terbilang += ""juta ""
+    if(ribu > 1):
+        terbilang += ratus_puluh_satuan(ribu)
+        terbilang += ""ribu ""
+    elif(ribu == 1):
+        terbilang += ""seribu ""
+    terbilang += ratus_puluh_satuan(sisa_ribu)
+
+    return terbilang
+
+
+
+angka = int(input(""Masukkan Angka : ""))
+terbilang = miliar_juta_ribu(angka)
+print(terbilang)"
+9021181722009,"import re
+
+print(""NUMBER TO WORD"")
+
+def hpstitik(angka):
+    hasil = []
+    temp = ''
+    indeks=0
+    for a in angka:
+        if(re.findall(""\d"",a)):
+            temp+=a
+        elif(a==','):
+            hasil.append(int(temp))
+            temp=''
+            hasil.append('Koma')
+        else:
+            hasil.append(int(temp))
+            temp=''
+        if(indeks == len(angka)-1):
+            hasil.append(int(temp))
+        indeks+=1
+    return hasil
+
+def pisah(array_angka):
+    belakang = []
+    elm=0
+    for a in array_angka:
+        if(a== 'Koma'):
+            belakang.append(a)
+            belakang.append(array_angka[elm+1])
+            array_angka.remove(array_angka[elm])
+            array_angka.remove(array_angka[elm])
+            break
+        elm+=1
+    return belakang
+
+def angka2kata(angka):
+    besaran = ['', '', 'Ribu ', 'Juta ', 'Milyar ', 'Triliun ', 'Kuadriliun ', 'Kuantiliun ', 'Sekstiliun ', 'Septiliun ', 'Oktiliun ', 'Noniliun ', 'Desiliun ']
+    satuan = ['' , 'Satu ', 'Dua ', 'Tiga ','Empat ', 'Lima ', 'Enam ', 'Tujuh ', 'Delapan ', 'Sembilan ']
+    angka= hpstitik(angka)
+    koma = pisah(angka)
+    kalimat = ''
+    titik=len(angka)
+    for a in angka:
+        if(int(a/100) == 1):
+            kalimat +='Seratus '
+            a= a%100
+        elif(int(a/100) > 1 ):
+            kalimat += satuan[int(a/100)]+'Ratus '
+            a= a%100
+        
+        if(int(a/10)>1):
+            kalimat += satuan[int(a/10)]+'Puluh '
+            a= (a%10)
+        elif(int(a/10)==1):
+            a%=10
+            if(a == 0):
+                kalimat += 'Sepuluh '
+                a-=a
+            elif(a == 1):
+                kalimat += 'Sebelas '
+                a-=a
+            else:
+                kalimat += satuan[int(a)]+'Belas '
+                a-=a
+        kalimat += satuan[int(a)]
+        kalimat += besaran[titik]
+        titik-=1
+    
+    for a in koma:
+        if(a=='Koma'):
+            kalimat+= a+' '
+        else:
+            for b in str(a):
+                kalimat += satuan[int(b)]
+    
+    return kalimat
+
+angka = input('Masukkan angka = ')
+print(angka2kata(angka))
+
+
+print(""WORD TO NUMBER"")
+
+def text2int (textnum, words={}):
+    if not words:
+        units = [
+        ""kosong"", ""satu"", ""dua"", ""tiga"", ""empat"", ""lima"", ""enam"", ""tujuh"", ""delapan"",
+        ""sembilan"", ""sepuluh"", ""sebelas"", ""duabelas"", ""tigabelas"", ""empatbelas"", ""limabelas"",
+        ""enambelas"", ""tujuhbelas"", ""delapanbelas"", ""sembilanbelas"",
+        ]
+
+        tens = ["""", """", ""duapuluh"", ""tigapuluh"", ""empatpuluh"", ""limapuluh"", ""enampuluh"", ""tujuhpuluh"", ""delapanpuluh"", ""sembilanpuluh""]
+
+        scales = [""ratus"", ""ribu"", ""juta"", ""milyar"", ""triliun""]
+
+        words[""and""] = (1, 0)
+        for idx, word in enumerate(units):  words[word] = (1, idx)
+        for idx, word in enumerate(tens):   words[word] = (1, idx * 10)
+        for idx, word in enumerate(scales): words[word] = (10 ** (idx * 3 or 2), 0)
+
+    textnum = textnum.replace('-', ' ')
+
+    current = result = 0
+    curstring = """"
+    onnumber = False
+    for word in textnum.split():
+        if word not in words:
+             if onnumber:
+                curstring += repr(result + current) + "" ""
+             curstring += word + "" ""
+             result = current = 0
+             onnumber = False
+        else:
+             scale, increment = words[word]
+
+             current = current * scale + increment
+             if scale > 100:
+                 result += current
+                 current = 0
+             onnumber = True
+
+    if onnumber:
+        curstring += repr(result + current)
+
+    return curstring
+
+
+masuk = input('Masukkan Word = ')
+change = text2int(masuk)
+print(change)"
+9021281722080,"import re
+
+
+
+def angka2kata(n) :
+
+    ""mengubah angka menjadi kata-kata""
+
+    k = ['','satu','dua','tiga','empat','lima','enam','tujuh','delapan','sembilan']
+
+    a = [1000000000000000,1000000000000,1000000000,1000000,1000,100,10,1]
+
+    s = ['kuadriliun','trilyun','milyar','juta','ribu','ratus','puluh','']
+
+
+
+    i=0 
+
+    x=""""
+
+    
+
+    while n>0 :
+
+        b = a[i]
+
+        c = n//b
+
+        if c>=10 :
+
+            x += angka2kata(c) + s[i] + "" ""
+
+        elif c>0 and c < 10 :
+
+            x += k[c] + "" ""+ s[i] + "" ""
+
+        else :
+
+            x += """"
+
+        i = i + 1
+
+        n -= b * c
+
+        x = re.sub(r'satu (ribu|ratus|puluh)',r'se\1',x)
+
+        x = re.sub(r'sepuluh (\w+)',r'\1 belas',x)
+
+        x = x.replace('satu belas','sebelas')
+
+    return x
+
+
+
+s =  angka2kata(9087)
+print(s)
+
+
+
+
+
+def text2int (textnum, numwords={}):
+    units = [
+        'zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight',
+        'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen',
+        'sixteen', 'seventeen', 'eighteen', 'nineteen',
+    ]
+    tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety']
+    scales = ['hundred', 'thousand', 'million', 'billion', 'trillion']
+    ordinal_words = {'first':1, 'second':2, 'third':3, 'fifth':5, 'eighth':8, 'ninth':9, 'twelfth':12}
+    ordinal_endings = [('ieth', 'y'), ('th', '')]
+
+    if not numwords:
+        numwords['and'] = (1, 0)
+        for idx, word in enumerate(units): numwords[word] = (1, idx)
+        for idx, word in enumerate(tens): numwords[word] = (1, idx * 10)
+        for idx, word in enumerate(scales): numwords[word] = (10 ** (idx * 3 or 2), 0)
+
+    textnum = textnum.replace('-', ' ')
+
+    current = result = 0
+    curstring = ''
+    onnumber = False
+    lastunit = False
+    lastscale = False
+
+    def is_numword(x):
+        if is_number(x):
+            return True
+        if word in numwords:
+            return True
+        return False
+
+    def from_numword(x):
+        if is_number(x):
+            scale = 0
+            increment = int(x.replace(',', ''))
+            return scale, increment
+        return numwords[x]
+
+    for word in textnum.split():
+        if word in ordinal_words:
+            scale, increment = (1, ordinal_words[word])
+            current = current * scale + increment
+            if scale > 100:
+                result += current
+                current = 0
+            onnumber = True
+            lastunit = False
+            lastscale = False
+        else:
+            for ending, replacement in ordinal_endings:
+                if word.endswith(ending):
+                    word = ""%s%s"" % (word[:-len(ending)], replacement)
+
+            if (not is_numword(word)) or (word == 'and' and not lastscale):
+                if onnumber:
+                    # Flush the current number we are building
+                    curstring += repr(result + current) + "" ""
+                curstring += word + "" ""
+                result = current = 0
+                onnumber = False
+                lastunit = False
+                lastscale = False
+            else:
+                scale, increment = from_numword(word)
+                onnumber = True
+
+                if lastunit and (word not in scales):                                                                                                                                                                                                                                         
+                    # Assume this is part of a string of individual numbers to                                                                                                                                                                                                                
+                    # be flushed, such as a zipcode ""one two three four five""                                                                                                                                                                                                                 
+                    curstring += repr(result + current)                                                                                                                                                                                                                                       
+                    result = current = 0                                                                                                                                                                                                                                                      
+
+                if scale > 1:                                                                                                                                                                                                                                                                 
+                    current = max(1, current)                                                                                                                                                                                                                                                 
+
+                current = current * scale + increment                                                                                                                                                                                                                                         
+                if scale > 100:                                                                                                                                                                                                                                                               
+                    result += current                                                                                                                                                                                                                                                         
+                    current = 0                                                                                                                                                                                                                                                               
+
+                lastscale = False                                                                                                                                                                                                              
+                lastunit = False                                                                                                                                                
+                if word in scales:                                                                                                                                                                                                             
+                    lastscale = True                                                                                                                                                                                                         
+                elif word in units:                                                                                                                                                                                                             
+                    lastunit = True
+
+    if onnumber:
+        curstring += repr(result + current)
+
+    return curstring
+"
+9021281722036,"1.def text2int(textnum, numwords={}):
+    if not numwords:
+      units = [
+        ""zero"", ""one"", ""two"", ""three"", ""four"", ""five"", ""six"", ""seven"", ""eight"",
+        ""nine"", ""ten"", ""eleven"", ""twelve"", ""thirteen"", ""fourteen"", ""fifteen"",
+        ""sixteen"", ""seventeen"", ""eighteen"", ""nineteen"",
+      ]
+
+      tens = ["""", """", ""twenty"", ""thirty"", ""forty"", ""fifty"", ""sixty"", ""seventy"", ""eighty"", ""ninety""]
+
+      scales = [""hundred"", ""thousand"", ""million"", ""billion"", ""trillion""]
+
+      numwords[""and""] = (1, 0)
+      for idx, word in enumerate(units):    numwords[word] = (1, idx)
+      for idx, word in enumerate(tens):     numwords[word] = (1, idx * 10)
+      for idx, word in enumerate(scales):   numwords[word] = (10 ** (idx * 3 or 2), 0)
+
+    current = result = 0
+    for word in textnum.split():
+        if word not in numwords:
+          raise Exception(""Illegal word: "" + word)
+
+        scale, increment = numwords[word]
+        current = current * scale + increment
+        if scale > 100:
+            result += current
+            current = 0
+
+    return result + current
+
+print text2int(""seven billion one hundred million thirty one thousand three hundred thirty seven"")
+#7100031337
+
+2.import re
+
+
+
+def angka2kata(n) :
+
+    ""mengubah angka menjadi kata-kata""
+
+    k = ['','satu','dua','tiga','empat','lima','enam','tujuh','delapan','sembilan']
+
+    a = [1000000000000000,1000000000000,1000000000,1000000,1000,100,10,1]
+
+    s = ['kuadriliun','trilyun','milyar','juta','ribu','ratus','puluh','']
+
+
+
+    i=0 
+
+    x=""""
+
+    
+
+    while n>0 :
+
+        b = a[i]
+
+        c = n//b
+
+        if c>=10 :
+
+            x += angka2kata(c) + s[i] + "" ""
+
+        elif c>0 and c < 10 :
+
+            x += k[c] + "" ""+ s[i] + "" ""
+
+        else :
+
+            x += """"
+
+        i = i + 1
+
+        n -= b * c
+
+        x = re.sub(r'satu (ribu|ratus|puluh)',r'se\1',x)
+
+        x = re.sub(r'sepuluh (\w+)',r'\1 belas',x)
+
+        x = x.replace('satu belas','sebelas')
+
+    return x
+
+
+
+s =  angka2kata(9087)
+print(s)"
+9021281722075,"# -*- coding: utf-8 -*-
+""""""
+Created on Wed Feb  5 01:40:59 2020
+
+@author: Defrian
+""""""
+
+satuan = ['', 'satu ', 'dua ', 'tiga ', 'empat ', 'lima ',
+          'enam ', 'tujuh ', 'delapan ', 'sembilan ', 'sepuluh ', 'sebelas ', 'dua belas ', 'tiga belas ', 'empat belas ', 'lima belas ', 'enam belas ', 'tujuh belas ', 'delapan belas ', 'sembilan belas ']
+
+
+def tulis(angka, kelipatan):
+    terbilang = satuan[angka] + kelipatan
+    return terbilang
+
+
+def ratus_puluh_satuan(angka):
+    ratus = angka // 100
+    sisa_ratus = angka % 100
+    puluh = sisa_ratus // 10
+    satuan = angka % 10
+    terbilang = ''
+
+    if(ratus == 1):
+        terbilang += tulis(0, ""seratus "")
+    elif(ratus != 1 and ratus >= 1):
+        terbilang += tulis(ratus, ""ratus "")
+    if (sisa_ratus >= 20):
+        terbilang += tulis(puluh, ""puluh "")
+        terbilang += tulis(satuan, """")
+    elif(sisa_ratus < 20):
+        terbilang += tulis(sisa_ratus, """")
+
+    return terbilang
+
+
+def milyar_juta_ribu(angka):
+    milyar = angka // 1000000000
+    sisa_milyar = angka % 1000000000
+    juta = sisa_milyar // 1000000
+    sisa_juta = sisa_milyar % 1000000
+    ribu = sisa_juta // 1000
+    sisa_ribu = sisa_juta % 1000
+    terbilang = ''
+
+    if(milyar >= 1):
+        terbilang += ratus_puluh_satuan(milyar)
+        terbilang += ""milyar ""
+    if(juta >= 1):
+        terbilang += ratus_puluh_satuan(juta)
+        terbilang += ""juta ""
+    if(ribu > 1):
+        terbilang += ratus_puluh_satuan(ribu)
+        terbilang += ""ribu ""
+    elif(ribu == 1):
+        terbilang += ""seribu ""
+    terbilang += ratus_puluh_satuan(sisa_ribu)
+
+    return terbilang
+
+
+angka = int(input(""Maskukan Angka :""))
+terbilang = milyar_juta_ribu(angka)
+print(terbilang)
+
+# -*- coding: utf-8 -*-
+""""""
+Created on Wed Feb  5 05:40:59 2020
+
+@author: Defrian
+""""""
+print(""THIS IS WORD TRANSLATOR TO NUMBER"")
+
+numbers = {""zero"":0, ""one"":1, ""two"":2, ""three"":3, ""four"":4, ""five"":5, ""six"":6, ""seven"":7,
+ ""eight"":8, ""nine"":9, ""ten"":10, ""eleven"":11, ""twelve"":12, ""thirteen"":13, ""fourteen"":14,
+ ""fifteen"":15, ""sixteen"":16, ""seventeen"":17, ""eighteen"":18,"" nineteen"":19, ""twenty"":20,
+ ""thirty"":30, ""forty"":40, ""fifty"":50, ""sixty"":60, ""seventy"":70, ""eighty"":80, ""ninety"":90,
+ ""hundred"":100, ""thousand"":1000, ""million"":1000000, ""billion"":1000000000, ""point"":111,
+ ""trillion"":1000000000000}
+
+lis = []
+def word2num(x):
+   num = 0
+   num1 = """"
+   point = 0
+   for i in x:
+     if i in numbers:
+           if numbers[i] < 100: 
+              num = num + numbers[i]
+           elif numbers[i] == 100:
+              num = num * numbers[i]
+           elif numbers[i] == 111:
+              lis.append(num)
+              point = 1
+              j = x.index(i)
+              k = x[(j+1)]
+              for o in k:
+                if o in numbers:             
+                  num1 += str(numbers[o])    
+                else:
+                  pass
+           else:
+              num = num * numbers[i]
+              lis.append(num)
+              num = 0
+     else:
+       pass
+   j = 0
+   if point:
+        o = int(num1)
+        p = len(num1)
+        num = o/10**p
+        while j < len(lis):
+          num = num + lis[j]
+          j = j + 1
+   else:
+        while j < len(lis):
+          num = num + lis[j]
+          j = j + 1
+   return(num)
+   
+your_input = (((((input(""Tuliskan Angkamu Menggunakan Bahasa Inggris : "")).lower()).replace("","","" "")).replace(""-"","" "")).replace(""."","" ""))
+word2number = (your_input).split("" "")
+print(word2num(word2number))"
+9021281722045,"#!/usr/bin/env python3
+# -- coding: utf-8 --
+""""""
+Created on Tue Feb  5 05:04:44 2020
+
+@author: Farhan
+""""""
+
+satuan = ['''nol ', 'satu ', 'dua ', 'tiga ', 'empat ', 'lima ',
+          'enam ', 'tujuh ', 'delapan ', 'sembilan ', 'sepuluh ', 
+          'sebelas ', 'dua belas ', 'tiga belas ', 'empat belas ', 
+          'lima belas ', 'enam belas ', 'tujuh belas ', 'delapan belas ', 
+          'sembilan belas ']
+
+
+def tulis(angka, kelipatan):
+    terbilang = satuan[angka] + kelipatan
+    return terbilang
+
+
+def ratus_puluh_satuan(angka):
+    ratus = angka // 100
+    sisa_ratus = angka % 100
+    puluh = sisa_ratus // 10
+    satuan = angka % 10
+    terbilang = ''
+
+    if(ratus == 1):
+        terbilang += tulis(0, ""seratus "")
+    elif(ratus != 1 and ratus >= 1):
+        terbilang += tulis(ratus, ""ratus "")
+    if (sisa_ratus >= 20):
+        terbilang += tulis(puluh, ""puluh "")
+        terbilang += tulis(satuan, """")
+    elif(sisa_ratus < 20):
+        terbilang += tulis(sisa_ratus, """")
+
+    return terbilang
+
+
+def milyar_juta_ribu(angka):
+    milyar = angka // 1000000000
+    sisa_milyar = angka % 1000000000
+    juta = sisa_milyar // 1000000
+    sisa_juta = sisa_milyar % 1000000
+    ribu = sisa_juta // 1000
+    sisa_ribu = sisa_juta % 1000
+    terbilang = ''
+
+    if(milyar >= 1):
+        terbilang += ratus_puluh_satuan(milyar)
+        terbilang += ""milyar ""
+    if(juta >= 1):
+        terbilang += ratus_puluh_satuan(juta)
+        terbilang += ""juta ""
+    if(ribu > 1):
+        terbilang += ratus_puluh_satuan(ribu)
+        terbilang += ""ribu ""
+    elif(ribu == 1):
+        terbilang += ""seribu ""
+    terbilang += ratus_puluh_satuan(sisa_ribu)
+
+    return terbilang
+
+
+angka = int(input(""Maskukan Angka :""))
+terbilang = milyar_juta_ribu(angka)
+print(terbilang)
+
+print(""THIS IS WORD TRANSLATOR TO NUMBER"")
+
+numbers = {""zero"":0, ""one"":1, ""two"":2, ""three"":3, ""four"":4, ""five"":5, ""six"":6, ""seven"":7,
+ ""eight"":8, ""nine"":9, ""ten"":10, ""eleven"":11, ""twelve"":12, ""thirteen"":13, ""fourteen"":14,
+ ""fifteen"":15, ""sixteen"":16, ""seventeen"":17, ""eighteen"":18,"" nineteen"":19, ""twenty"":20,
+ ""thirty"":30, ""forty"":40, ""fifty"":50, ""sixty"":60, ""seventy"":70, ""eighty"":80, ""ninety"":90,
+ ""hundred"":100, ""thousand"":1000, ""million"":1000000, ""billion"":1000000000, ""point"":111,
+ ""trillion"":1000000000000}
+
+lis = []
+def word2num(x):
+   num = 0
+   num1 = """"
+   point = 0
+   for i in x:
+     if i in numbers:
+           if numbers[i] < 100: 
+              num = num + numbers[i]
+           elif numbers[i] == 100:
+              num = num * numbers[i]
+           elif numbers[i] == 111:
+              lis.append(num)
+              point = 1
+              j = x.index(i)
+              k = x[(j+1)]
+              for o in k:
+                if o in numbers:             
+                  num1 += str(numbers[o])    
+                else:
+                  pass
+           else:
+              num = num * numbers[i]
+              lis.append(num)
+              num = 0
+     else:
+       pass
+   j = 0
+   if point:
+        o = int(num1)
+        p = len(num1)
+        num = o/10**p
+        while j < len(lis):
+          num = num + lis[j]
+          j = j + 1
+   else:
+        while j < len(lis):
+          num = num + lis[j]
+          j = j + 1
+   return(num)
+   
+your_input = (((((input(""Tuliskan Angkamu Menggunakan Bahasa Inggris : "")).lower()).replace("","","" "")).replace(""-"","" "")).replace(""."","" ""))
+word2number = (your_input).split("" "")
+print(word2num(word2number))"
